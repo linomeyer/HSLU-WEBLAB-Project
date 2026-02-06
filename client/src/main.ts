@@ -18,5 +18,6 @@ const auth0Config = mergeApplicationConfig(appConfig, {
   ]
 });
 
-bootstrapApplication(AppComponent, appConfig)
+bootstrapApplication(AppComponent, auth0Config)
   .catch((err) => console.error(err));
+ 

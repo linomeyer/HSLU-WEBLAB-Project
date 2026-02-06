@@ -51,7 +51,8 @@ import {CommonModule} from '@angular/common';
         </div>
       </div>
     }
-  `
+  `,
+  styleUrls: ['../app.component.css']
 })
 export class ProfileComponent {
   protected auth = inject(AuthService);

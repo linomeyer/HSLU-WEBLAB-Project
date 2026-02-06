@@ -11,7 +11,8 @@ import {AuthService} from '@auth0/auth0-angular';
     >
       Log In
     </button>
-  `
+  `,
+  styleUrls: ['../app.component.css']
 })
 export class LoginButtonComponent {
   private auth = inject(AuthService);
