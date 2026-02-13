@@ -18,8 +18,11 @@ export class Technology extends Document {
   @Prop({ required: true })
   reason: string;
 
-  @Prop({ default: Date.now })
+  @Prop({ default: Date.now, required: true })
   createdAt: Date;
+
+  @Prop()
+  changedAt: Date;
 
   @Prop({ default: false })
   isPublished: boolean;

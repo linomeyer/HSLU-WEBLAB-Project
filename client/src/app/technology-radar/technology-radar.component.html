@@ -5,3 +5,71 @@
     <mat-icon>lock</mat-icon>
   </button>
 </a>
+
+
+<div class="radar-container">
+  <svg [attr.viewBox]="'0 0 ' + size + ' ' + size" class="radar-svg">
+
+    <!-- Ring circles -->
+    @for (r of ringRadii; track r) {
+      <circle
+        [attr.cx]="center" [attr.cy]="center" [attr.r]="r"
+        fill="none" stroke="#ccc" stroke-width="1"/>
+    }
+
+    <!-- Cross lines (quadrant dividers) -->
+    <line [attr.x1]="0" [attr.y1]="center" [attr.x2]="size" [attr.y2]="center"
+          stroke="#ccc" stroke-width="1"/>
+    <line [attr.x1]="center" [attr.y1]="0" [attr.x2]="center" [attr.y2]="size"
+          stroke="#ccc" stroke-width="1"/>
+
+    <!-- Quadrant labels -->
+    <text x="40" y="30" class="quadrant-label" [attr.fill]="categoryColors['Techniques']">Techniques</text>
+    <text [attr.x]="size - 40" y="30" text-anchor="end" class="quadrant-label" [attr.fill]="categoryColors['Tools']">
+      Tools
+    </text>
+    <text x="40" [attr.y]="size - 15" class="quadrant-label" [attr.fill]="categoryColors['Platforms']">Platforms</text>
+    <text [attr.x]="size - 40" [attr.y]="size - 15" text-anchor="end" class="quadrant-label"
+          [attr.fill]="categoryColors['Languages & Frameworks']">Languages &amp; Frameworks
+    </text>
+
+    <!-- Ring labels -->
+    @for (ring of rings; track ring) {
+      <text
+        [attr.x]="center - ringRadii[$index] + 10"
+        [attr.y]="center - 5"
+        class="ring-label">
+        {{ ring }}
+      </text>
+    }
+
+    <!-- Technology points -->
+    @for (radarPoint of radarPoints(); track radarPoint.id) {
+      <g
+        [matTooltip]="radarPoint.name"
+        (click)="openDetail(radarPoint)"
+        class="radarpoint">
+        <circle [attr.cx]="radarPoint.x" [attr.cy]="radarPoint.y" r="14"
+                fill="none" [attr.stroke]="radarPoint.color" stroke-width="2"/>
+        <circle [attr.cx]="radarPoint.x" [attr.cy]="radarPoint.y" r="10"
+                [attr.fill]="radarPoint.color" opacity="0.85"/>
+        <text [attr.x]="radarPoint.x" [attr.y]="radarPoint.y + 4"
+              text-anchor="middle" class="radarpoint-label">
+          {{ $index + 1 }}
+        </text>
+      </g>
+    }
+  </svg>
+
+  <!-- Legend -->
+  <div class="legend">
+    @for (radarPoint of radarPoints(); track radarPoint.id) {
+      <div
+        (click)="openDetail(radarPoint)"
+        class="legend-item">
+        <span class="legend-number" [style.background-color]="radarPoint.color">{{ $index + 1 }}</span>
+        <span class="legend-name">{{ radarPoint.name }}</span>
+      </div>
+    }
+  </div>
+</div>
