@@ -12,7 +12,7 @@ import {AuthService} from '@auth0/auth0-angular';
       Log Out
     </button>
   `,
-  styleUrls: ['../app.component.css']
+  styleUrls: ['./auth.component.css']
 })
 export class LogoutButtonComponent {
   private auth = inject(AuthService);

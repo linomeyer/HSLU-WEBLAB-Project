@@ -12,12 +12,14 @@ import {AuthService} from '@auth0/auth0-angular';
       Log In
     </button>
   `,
-  styleUrls: ['../app.component.css']
+  styleUrls: ['./auth.component.css']
 })
 export class LoginButtonComponent {
   private auth = inject(AuthService);
 
   loginWithRedirect(): void {
-    this.auth.loginWithRedirect();
+    this.auth.loginWithRedirect({
+      appState: {target: '/administration'}
+    })
   }
 }
