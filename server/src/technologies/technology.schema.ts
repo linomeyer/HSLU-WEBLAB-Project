@@ -20,6 +20,9 @@ export class Technology extends Document {
 
   @Prop({ default: Date.now })
   createdAt: Date;
+
+  @Prop({ default: false })
+  isPublished: boolean;
 }
 
 export const TechnologySchema = SchemaFactory.createForClass(Technology);
