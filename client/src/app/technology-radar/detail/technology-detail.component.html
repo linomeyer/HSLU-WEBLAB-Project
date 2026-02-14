@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>{{ data.technology.name }}</h2>
+<h2 mat-dialog-title class="detail-title">{{ data.technology.name }}</h2>
 <mat-dialog-content>
   <div class="chips">
     <mat-chip-set>
@@ -16,5 +16,5 @@
   <p class="date">Added on {{ data.technology.createdAt | date:'mediumDate' }}</p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Close</button>
+  <button mat-button mat-dialog-close class="close-button">Close</button>
 </mat-dialog-actions>

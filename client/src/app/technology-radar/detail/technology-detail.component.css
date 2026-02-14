@@ -18,6 +18,10 @@ h3 {
   letter-spacing: 0.5px;
 }
 
+.detail-title {
+  font-size: 24px;
+}
+
 p {
   margin: 0 0 12px;
   line-height: 1.5;
@@ -27,4 +31,8 @@ p {
   font-size: 12px;
   color: #999;
   margin-top: 16px;
+}
+
+.close-button {
+  color: #888
 }

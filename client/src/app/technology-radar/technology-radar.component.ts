@@ -1,7 +1,4 @@
 import {Component, computed, inject, Signal} from '@angular/core';
-import {MatFabButton} from '@angular/material/button';
-import {MatIcon} from '@angular/material/icon';
-import {RouterLink} from '@angular/router';
 import {TechnologyService} from './technology/technology.service';
 import {MatDialog} from '@angular/material/dialog';
 import {RadarPoint} from './radar-point'
@@ -33,9 +30,6 @@ const QUADRANT_ANGLES: Record<string, { start: number; end: number }> = {
 @Component({
   selector: 'app-technology-radar',
   imports: [
-    MatFabButton,
-    MatIcon,
-    RouterLink,
     MatTooltip
   ],
   templateUrl: './technology-radar.component.html',
@@ -105,14 +99,5 @@ export class TechnologyRadarComponent {
         technology: tech,
       };
     }).filter((p): p is RadarPoint => p !== null);
-  }
-
-  private hashCode(str: string): number {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = (hash << 5) - hash + str.charCodeAt(i);
-      hash |= 0;
-    }
-    return hash;
   }
 }
