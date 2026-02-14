@@ -91,7 +91,7 @@ export class TechnologyRadarComponent {
         : (midRadius + outerRadius) / 2;
 
       return {
-        id: tech.id,
+        id: tech._id,
         name: tech.name,
         x: CENTER + radius * Math.cos(angleRad),
         y: CENTER + radius * Math.sin(angleRad),

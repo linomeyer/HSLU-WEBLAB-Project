@@ -2,9 +2,15 @@
   <div class="navbar-content">
     <h1 class="navbar-title" routerLink="/technology-radar">Technology Radar</h1>
 
-    <button mat-flat-button routerLink="/administration" class="admin-button">
-      <mat-icon>lock</mat-icon>
-      <span>Administration</span>
-    </button>
+    <div class="navbar-actions">
+      <button mat-flat-button (click)="goToAdministration()" ) class="admin-button">
+        <mat-icon>lock</mat-icon>
+        <span>Administration</span>
+      </button>
+
+      <button mat-icon-button (click)="handleProfileClick()" class="profile-button">
+        <mat-icon>person</mat-icon>
+      </button>
+    </div>
   </div>
 </nav>

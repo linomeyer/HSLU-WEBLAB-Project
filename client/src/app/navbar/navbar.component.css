@@ -29,6 +29,12 @@
   color: #63b3ed;
 }
 
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .admin-button {
   display: flex;
   align-items: center;
@@ -49,4 +55,28 @@
   font-size: 20px;
   width: 20px;
   height: 20px;
+}
+
+.profile-button {
+  background-color: #2d313c !important;
+  color: #e2e8f0 !important;
+  width: 40px;
+  height: 40px;
+  transition: all 0.2s ease;
+}
+
+.profile-button:hover {
+  background-color: #3a3f4b !important;
+  transform: translateY(-2px);
+}
+
+.profile-button mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.navbar-actions {
+  display: flex;
+  gap: 12px;
 }
