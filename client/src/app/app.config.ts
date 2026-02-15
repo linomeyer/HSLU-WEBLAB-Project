@@ -2,15 +2,15 @@ import {ApplicationConfig, provideBrowserGlobalErrorListeners} from '@angular/co
 import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
-import {provideAuth0} from '@auth0/auth0-angular';
+import {authHttpInterceptorFn, provideAuth0} from '@auth0/auth0-angular';
 import {environment} from '../environments/environment';
-import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClient, withInterceptors} from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authHttpInterceptorFn])),
     provideAuth0({
       domain: environment.auth0.domain,
       clientId: environment.auth0.clientId,
@@ -21,15 +21,15 @@ export const appConfig: ApplicationConfig = {
       httpInterceptor: { // interceptor is not needed for GET Request, GET is always allowed
         allowedList: [
           {
-            uri: '/api/technology*',
+            uri: 'http://localhost:3000/technology*',
             httpMethod: 'POST',
           },
           {
-            uri: '/api/technology*',
+            uri: 'http://localhost:3000/technology*',
             httpMethod: 'PUT',
           },
           {
-            uri: '/api/technology*',
+            uri: 'http://localhost:3000/technology*',
             httpMethod: 'DELETE',
           },
         ]
