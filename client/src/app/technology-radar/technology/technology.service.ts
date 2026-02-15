@@ -8,7 +8,7 @@ import {Observable} from 'rxjs';
 
 })
 export class TechnologyService {
-  private apiUrl = 'http://localhost:3000/technology';
+  private apiUrl = '/api/technology';
   private http = inject(HttpClient);
 
   getAll(): Observable<Technology[]> {

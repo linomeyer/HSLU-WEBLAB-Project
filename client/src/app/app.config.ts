@@ -21,15 +21,15 @@ export const appConfig: ApplicationConfig = {
       httpInterceptor: { // interceptor is not needed for GET Request, GET is always allowed
         allowedList: [
           {
-            uri: 'http://localhost:3000/technology*',
+            uri: '/api/technology*',
             httpMethod: 'POST',
           },
           {
-            uri: 'http://localhost:3000/technology*',
+            uri: '/api/technology*',
             httpMethod: 'PUT',
           },
           {
-            uri: 'http://localhost:3000/technology*',
+            uri: '/api/technology*',
             httpMethod: 'DELETE',
           },
         ]
