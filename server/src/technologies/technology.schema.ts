@@ -18,7 +18,7 @@ export class Technology extends Document {
   @Prop({ required: true })
   reason: string;
 
-  @Prop({ default: Date.now, required: true })
+  @Prop({ default: new Date(), required: true })
   createdAt: Date;
 
   @Prop()

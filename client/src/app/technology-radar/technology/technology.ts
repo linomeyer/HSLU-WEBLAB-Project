@@ -1,5 +1,5 @@
 export interface Technology {
-  _id: string;
+  _id?: string;
   name: string;
   category: string;
   ring: string;
@@ -7,5 +7,5 @@ export interface Technology {
   reason: string;
   isPublished: boolean;
   createdAt: Date;
-  changedAt: Date;
+  changedAt?: Date;
 }

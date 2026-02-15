@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -27,8 +27,5 @@ import {MatButton} from '@angular/material/button';
   styleUrl: './technology-detail.component.css',
 })
 export class TechnologyDetailComponent {
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { technology: Technology; color: string }
-  ) {
-  }
+  protected data: { technology: Technology; color: string } = inject(MAT_DIALOG_DATA);
 }
