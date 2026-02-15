@@ -16,7 +16,23 @@ export const appConfig: ApplicationConfig = {
       clientId: environment.auth0.clientId,
       authorizationParams: {
         redirect_uri: window.location.origin,
-        audience: 'https://dev-82m7uo7ptlal3yfw.us.auth0.com/api/v2/',
+        audience: environment.auth0.audience,
+      },
+      httpInterceptor: { // interceptor is not needed for GET Request, GET is always allowed
+        allowedList: [
+          {
+            uri: '/api/technology*',
+            httpMethod: 'POST',
+          },
+          {
+            uri: '/api/technology*',
+            httpMethod: 'PUT',
+          },
+          {
+            uri: '/api/technology*',
+            httpMethod: 'DELETE',
+          },
+        ]
       }
     }),
   ]
