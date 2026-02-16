@@ -1,3 +1,4 @@
+
 .admin-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -22,36 +23,6 @@ h2 {
   color: #333;
 }
 
-.form-field {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-}
-
-.form-field label {
-  margin-bottom: 0.25rem;
-  font-weight: 600;
-}
-
-.form-field input,
-.form-field select,
-.form-field textarea {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-.form-field textarea {
-  resize: vertical;
-}
-
-.field-error {
-  color: #d32f2f;
-  font-size: 0.85rem;
-  margin-top: 0.25rem;
-}
-
 .message {
   padding: 0.75rem 1rem;
   border-radius: 4px;
@@ -66,89 +37,6 @@ h2 {
 .message.error {
   background-color: #ffebee;
   color: #c62828;
-}
-
-button[type="submit"] {
-  padding: 0.6rem 1.5rem;
-  background-color: #1976d2;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  width: 100%;
-}
-
-button[type="submit"]:hover:not(:disabled) {
-  background-color: #1565c0;
-}
-
-button[type="submit"]:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.toggle-field {
-  flex-direction: row;
-  align-items: center;
-  gap: 1rem;
-}
-
-.toggle-field > label:first-child {
-  margin-bottom: 0;
-}
-
-.toggle-container {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 0.5rem;
-}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 24px;
-  margin: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: 0.3s;
-  border-radius: 24px;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 18px;
-  width: 18px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: 0.3s;
-  border-radius: 50%;
-}
-
-input:checked + .slider {
-  background-color: #1976d2;
-}
-
-input:checked + .slider:before {
-  transform: translateX(26px);
-}
-
-.toggle-label {
-  font-weight: 600;
-  color: #555;
-  min-width: 30px;
 }
 
 /* Technologies List Styles */
@@ -190,11 +78,13 @@ input:checked + .slider:before {
   padding: 1rem;
   margin-bottom: 0.75rem;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .technology-item:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-color: #1976d2;
+  transform: translateY(-2px);
 }
 
 .technology-item h3 {
@@ -213,7 +103,6 @@ input:checked + .slider:before {
   font-weight: 500;
 }
 
-/* Responsive Design */
 @media (max-width: 968px) {
   .admin-layout {
     grid-template-columns: 1fr;

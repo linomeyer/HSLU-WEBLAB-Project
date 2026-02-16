@@ -1,19 +1,22 @@
-import {Component, computed, inject, Signal} from '@angular/core';
-import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Component, computed, inject, Signal, viewChild} from '@angular/core';
+import {ReactiveFormsModule} from '@angular/forms';
 import {TechnologyService} from '../technology-radar/technology/technology.service';
 import {Technology} from '../technology-radar/technology/technology';
 import {CommonModule} from '@angular/common';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {TechnologyFormComponent} from '../technology-radar/technology/form/technology-form.component';
+import {MatDialog} from '@angular/material/dialog';
+import {TechnologyEditModalComponent} from '../technology-radar/technology/edit/technology-edit-modal.component';
 
 @Component({
   selector: 'app-administration',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, TechnologyFormComponent],
   templateUrl: './administration.component.html',
   styleUrl: './administration.component.css',
 })
 export class AdministrationComponent {
-  private fb = inject(FormBuilder);
   private techService = inject(TechnologyService);
+  private dialog = inject(MatDialog);
 
   private technologies: Signal<Technology[]> = toSignal(this.techService.getAll(), {initialValue: []});
 
@@ -21,28 +24,15 @@ export class AdministrationComponent {
     return this.technologies().filter((t) => !t.isPublished);
   });
 
+  formComponent = viewChild<TechnologyFormComponent>(TechnologyFormComponent);
+
   successMessage = '';
   errorMessage = '';
 
-  technologyForm = this.fb.group({
-    name: ['', Validators.required],
-    category: ['', Validators.required],
-    ring: ['', Validators.required],
-    description: ['', Validators.required],
-    reason: ['', Validators.required],
-    isPublished: [false, Validators.required],
-  });
-
-  onSubmit(): void {
-    if (this.technologyForm.invalid) {
-      this.technologyForm.markAllAsTouched();
-      return;
-    }
-
+  onFormSubmit(formData: Partial<Technology>): void {
     this.successMessage = '';
     this.errorMessage = '';
 
-    const formData = this.technologyForm.value;
     const technology: Technology = {
       name: formData.name!,
       category: formData.category!,
@@ -56,12 +46,27 @@ export class AdministrationComponent {
     this.techService.post(technology).subscribe({
       next: () => {
         this.successMessage = 'Technology created successfully!';
-        this.technologyForm.reset();
+        this.formComponent()?.reset();
       },
       error: (err) => {
         this.errorMessage = 'Failed to create technology. Please try again.';
         console.error('Error creating technology:', err);
       },
+    });
+  }
+
+  onTechnologyClick(technology: Technology): void {
+    const dialogRef = this.dialog.open(TechnologyEditModalComponent, {
+      data: technology,
+      width: '600px',
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.successMessage = 'Technology updated successfully!';
+        setTimeout(() => this.successMessage = '', 3000);
+      }
     });
   }
 }

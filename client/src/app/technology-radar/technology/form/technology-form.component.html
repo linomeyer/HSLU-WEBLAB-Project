@@ -1,0 +1,66 @@
+<form [formGroup]="technologyForm" (ngSubmit)="onSubmit()">
+  <div class="form-field">
+    <label for="name">Name</label>
+    <input id="name" type="text" formControlName="name"/>
+    @if (technologyForm.controls['name'].touched && technologyForm.controls['name'].errors?.['required']) {
+      <span class="field-error">Name is required.</span>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="category">Category</label>
+    <select id="category" formControlName="category">
+      <option value="" disabled>Select a category</option>
+      <option value="Techniques">Techniques</option>
+      <option value="Platforms">Platforms</option>
+      <option value="Tools">Tools</option>
+      <option value="Languages & Frameworks">Languages &amp; Frameworks</option>
+    </select>
+    @if (technologyForm.controls['category'].touched && technologyForm.controls['category'].errors?.['required']) {
+      <span class="field-error">Category is required.</span>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="ring">Ring</label>
+    <select id="ring" formControlName="ring">
+      <option value="" disabled>Select a ring</option>
+      <option value="Adopt">Adopt</option>
+      <option value="Trial">Trial</option>
+      <option value="Assess">Assess</option>
+      <option value="Hold">Hold</option>
+    </select>
+    @if (technologyForm.controls['ring'].touched && technologyForm.controls['ring'].errors?.['required']) {
+      <span class="field-error">Ring is required.</span>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="description">Description</label>
+    <textarea id="description" formControlName="description" rows="4"></textarea>
+    @if (technologyForm.controls['description'].touched && technologyForm.controls['description'].errors?.['required']) {
+      <span class="field-error">Description is required.</span>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="reason">Reason</label>
+    <textarea id="reason" formControlName="reason" rows="4"></textarea>
+    @if (technologyForm.controls['reason'].touched && technologyForm.controls['reason'].errors?.['required']) {
+      <span class="field-error">Reason is required.</span>
+    }
+  </div>
+
+  <div class="form-field">
+    <label>Publish?</label>
+    <div class="toggle-container">
+      <label class="switch">
+        <input id="isPublished" type="checkbox" formControlName="isPublished"/>
+        <span class="slider"></span>
+      </label>
+      <span class="toggle-label">{{ technologyForm.value.isPublished ? 'Yes' : 'No' }}</span>
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="technologyForm.invalid">{{ submitButtonText() }}</button>
+</form>
