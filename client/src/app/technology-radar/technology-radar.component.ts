@@ -3,7 +3,7 @@ import {TechnologyService} from './technology/technology.service';
 import {MatDialog} from '@angular/material/dialog';
 import {RadarPoint} from './radar-point'
 import {Technology} from './technology/technology';
-import {TechnologyDetailComponent} from './detail/technology-detail.component';
+import {TechnologyDetailComponent} from './technology/detail/technology-detail.component';
 import {MatTooltip} from '@angular/material/tooltip';
 import {toSignal} from '@angular/core/rxjs-interop';
 

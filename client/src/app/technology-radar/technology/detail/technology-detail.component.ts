@@ -6,7 +6,7 @@ import {
   MatDialogContent,
   MatDialogTitle
 } from '@angular/material/dialog';
-import {Technology} from '../technology/technology';
+import {Technology} from '../technology';
 import {MatChip, MatChipSet} from '@angular/material/chips';
 import {DatePipe} from '@angular/common';
 import {MatButton} from '@angular/material/button';
