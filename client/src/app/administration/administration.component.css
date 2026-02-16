@@ -1,11 +1,25 @@
-.admin-container {
-  max-width: 600px;
-  margin: 2rem auto;
+.admin-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.form-section,
+.list-section {
   padding: 1.5rem;
+}
+
+.form-section {
+  border-right: 1px solid #e0e0e0;
 }
 
 h2 {
   margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: #333;
 }
 
 .form-field {
@@ -62,6 +76,7 @@ button[type="submit"] {
   border-radius: 4px;
   font-size: 1rem;
   cursor: pointer;
+  width: 100%;
 }
 
 button[type="submit"]:hover:not(:disabled) {
@@ -97,7 +112,6 @@ button[type="submit"]:disabled {
   height: 24px;
   margin: 0;
 }
-
 
 .slider {
   position: absolute;
@@ -135,4 +149,82 @@ input:checked + .slider:before {
   font-weight: 600;
   color: #555;
   min-width: 30px;
+}
+
+/* Technologies List Styles */
+.technologies-list {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.technologies-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.technologies-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.technologies-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.technologies-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.empty-message {
+  color: #666;
+  font-style: italic;
+  text-align: center;
+  padding: 2rem;
+}
+
+.technology-item {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.technology-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: #1976d2;
+}
+
+.technology-item h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background-color: #1976d2;
+  color: white;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .form-section {
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .technologies-list {
+    max-height: 400px;
+  }
 }

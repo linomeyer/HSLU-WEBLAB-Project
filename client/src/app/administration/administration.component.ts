@@ -1,19 +1,25 @@
-import {Component, inject} from '@angular/core';
+import {Component, computed, inject, Signal} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-import {HttpClient} from '@angular/common/http';
 import {TechnologyService} from '../technology-radar/technology/technology.service';
 import {Technology} from '../technology-radar/technology/technology';
+import {CommonModule} from '@angular/common';
+import {toSignal} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-administration',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './administration.component.html',
   styleUrl: './administration.component.css',
 })
 export class AdministrationComponent {
   private fb = inject(FormBuilder);
-  private http = inject(HttpClient);
   private techService = inject(TechnologyService);
+
+  private technologies: Signal<Technology[]> = toSignal(this.techService.getAll(), {initialValue: []});
+
+  unpublishedTechnologies = computed(() => {
+    return this.technologies().filter((t) => !t.isPublished);
+  });
 
   successMessage = '';
   errorMessage = '';
