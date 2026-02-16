@@ -18,5 +18,9 @@ export class TechnologyService {
   post(technology: Technology): Observable<Technology> {
     return this.http.post<Technology>(this.apiUrl, technology);
   }
+
+  put(id: string, technology: Technology): Observable<Technology> {
+    return this.http.put<Technology>(`${this.apiUrl}/${id}`, technology);
+  }
 }
 

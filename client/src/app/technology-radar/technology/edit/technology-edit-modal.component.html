@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Edit Technology</h2>
+
+<mat-dialog-content>
+  @if (successMessage) {
+    <div class="message success">{{ successMessage }}</div>
+  }
+  @if (errorMessage) {
+    <div class="message error">{{ errorMessage }}</div>
+  }
+
+  <app-technology-form
+    [technology]="data"
+    [submitButtonText]="'Update Technology'"
+    (formSubmit)="onFormSubmit($event)">
+  </app-technology-form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+</mat-dialog-actions>
