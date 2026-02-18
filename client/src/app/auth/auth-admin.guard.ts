@@ -16,14 +16,7 @@ export const authAdminGuard = () => {
       // atob == base64 decode of JWT token
       const payload = JSON.parse(atob(token.split('.')[1]));
       const roles: string[] = payload['https://technology-radar.com/roles'] || [];
-      const isAdmin = roles.includes('admin');
-
-      if (isAdmin) {
-        return true;
-      }
-
-      router.navigate(['/administration']);
-      return false;
+      return roles.includes('admin');
     })
   );
 };

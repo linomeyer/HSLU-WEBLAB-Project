@@ -6,6 +6,10 @@ import {Technology} from './technology/technology';
 import {TechnologyDetailComponent} from './technology/detail/technology-detail.component';
 import {MatTooltip} from '@angular/material/tooltip';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {AuthService} from '@auth0/auth0-angular';
+import {map, switchMap, take} from 'rxjs/operators';
+import {from} from 'rxjs';
+import {TechnologyEditModalComponent} from './technology/edit/technology-edit-modal.component';
 
 const CATEGORIES = ['Techniques', 'Tools', 'Platforms', 'Languages & Frameworks'];
 const RINGS = ['Adopt', 'Trial', 'Assess', 'Hold'];
@@ -38,6 +42,7 @@ const QUADRANT_ANGLES: Record<string, { start: number; end: number }> = {
 export class TechnologyRadarComponent {
   private techService = inject(TechnologyService);
   private dialog = inject(MatDialog);
+  private auth = inject(AuthService);
 
   private technologies: Signal<Technology[]> = toSignal(this.techService.getAll(), {initialValue: []});
 
@@ -53,13 +58,41 @@ export class TechnologyRadarComponent {
   center = CENTER;
   size = RADAR_SIZE;
 
+  /**
+   * Opens a modal dialog for editing a technology.
+   * If the user is not an admin, only the detail view is shown.
+   */
   openDetail(radarPoint: RadarPoint): void {
-    this.dialog.open(TechnologyDetailComponent, {
-      data: {
-        technology: radarPoint.technology,
-        color: radarPoint.color,
-      },
-      width: '500px',
+    this.auth.isAuthenticated$.pipe(
+      take(1),
+      switchMap((isAuthenticated) => {
+        if (!isAuthenticated) {
+          return from([false]);
+        }
+        return from(this.auth.getAccessTokenSilently()).pipe(
+          map((token) => {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const roles: string[] = payload['https://technology-radar.com/roles'] || [];
+            return roles.includes('admin');
+          })
+        );
+      })
+    ).subscribe((isAdmin) => {
+      if (isAdmin) {
+        this.dialog.open(TechnologyEditModalComponent, {
+          data: radarPoint.technology,
+          width: '600px',
+          disableClose: false
+        });
+      } else {
+        this.dialog.open(TechnologyDetailComponent, {
+          data: {
+            technology: radarPoint.technology,
+            color: radarPoint.color,
+          },
+          width: '500px',
+        });
+      }
     });
   }
 
