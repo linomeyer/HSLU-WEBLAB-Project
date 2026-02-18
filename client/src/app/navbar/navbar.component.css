@@ -46,6 +46,11 @@
   transition: all 0.2s ease;
 }
 
+.admin-active {
+  background-color: #2a652b !important;
+}
+
+
 .admin-button:hover {
   background-color: #3a3f4b !important;
   transform: translateY(-2px);

@@ -3,7 +3,7 @@
     <h1 class="navbar-title" routerLink="/technology-radar">Technology Radar</h1>
 
     <div class="navbar-actions">
-      <button mat-flat-button (click)="goToAdministration()" ) class="admin-button">
+      <button mat-flat-button (click)="goToAdministration()" [class.admin-active]="isAdmin()" class="admin-button">
         <mat-icon>lock</mat-icon>
         <span>Administration</span>
       </button>
