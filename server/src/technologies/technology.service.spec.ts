@@ -8,6 +8,7 @@ import {
   rootMongooseTestModule,
 } from '../test-utils/test-database.module';
 import { testTechnologies } from '../test-utils/technology.data';
+import { TechnologyDto } from './dtos/technology.dto';
 
 describe('TechnologyService', () => {
   let service: TechnologyService;
@@ -67,7 +68,7 @@ describe('TechnologyService', () => {
     it('should create a new technology', async () => {
       const newTech = testTechnologies[0];
 
-      const result = await service.create(newTech as Technology);
+      const result = await service.create(newTech as TechnologyDto);
 
       expect(result._id).toBeDefined();
       expect(result.name).toBe(newTech.name);
@@ -80,7 +81,7 @@ describe('TechnologyService', () => {
 
       const result = await service.update(created._id.toString(), {
         name: 'React 18',
-      } as Technology);
+      } as TechnologyDto);
 
       expect(result?.name).toBe('React 18');
     });

@@ -8,42 +8,75 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { TechnologyService } from './technology.service';
 import { Technology } from './technology.schema';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/roles.guard';
+import { AdminRoleGuard } from '../auth/admin-role-guard.service';
+import { TechnologyDto } from './dtos/technology.dto';
+import { UpdateTechnologyDto } from './dtos/update-technology.dto';
 
+@ApiTags('technologies')
 @Controller('technology')
 export class TechnologyController {
   constructor(private readonly technologyService: TechnologyService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all technologies' })
+  @ApiResponse({ status: 200, description: 'Returns all technologies' })
   async findAll(): Promise<Technology[]> {
     return this.technologyService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get technology by ID' })
+  @ApiResponse({ status: 200, description: 'Returns the technology' })
+  @ApiResponse({ status: 404, description: 'Technology not found' })
   async findOne(@Param('id') id: string): Promise<Technology> {
     return this.technologyService.findOne(id);
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  async create(@Body() technology: Technology): Promise<Technology> {
+  @UseGuards(JwtAuthGuard, AdminRoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create new technology (Admin only)' })
+  @ApiResponse({ status: 201, description: 'Technology created successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid input' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })
+  async create(@Body() technology: TechnologyDto): Promise<Technology> {
     return this.technologyService.create(technology);
   }
 
   @Put(':id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, AdminRoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update technology (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Technology updated successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid input' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })
+  @ApiResponse({ status: 404, description: 'Technology not found' })
   async update(
     @Param('id') id: string,
-    @Body() technology: Technology,
+    @Body() technology: UpdateTechnologyDto,
   ): Promise<Technology> {
     return this.technologyService.update(id, technology);
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, AdminRoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete technology (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Technology deleted successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })
+  @ApiResponse({ status: 404, description: 'Technology not found' })
   async delete(@Param('id') id: string): Promise<Technology> {
     return this.technologyService.delete(id);
   }

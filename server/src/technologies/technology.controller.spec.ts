@@ -12,6 +12,7 @@ import {
   singleTechnology,
   testTechnologies,
 } from '../test-utils/technology.data';
+import { TechnologyDto } from './dtos/technology.dto';
 
 describe('TechnologyController', () => {
   let controller: TechnologyController;
@@ -103,7 +104,7 @@ describe('TechnologyController', () => {
         isPublished: true,
       };
 
-      const result = await controller.create(newTech as Technology);
+      const result = await controller.create(newTech as TechnologyDto);
 
       expect(result).toBeDefined();
       expect(result.name).toBe('TypeScript');
@@ -126,7 +127,7 @@ describe('TechnologyController', () => {
 
         const result = await controller.update(
           created._id.toString(),
-          updateData as Technology,
+          updateData as TechnologyDto,
         );
 
         expect(result).not.toBeNull();
@@ -145,7 +146,7 @@ describe('TechnologyController', () => {
 
         const result = await controller.update(created._id.toString(), {
           description: 'New description',
-        } as Technology);
+        } as TechnologyDto);
 
         expect(result).not.toBeNull();
         expect(result.changedAt.getTime()).toBeGreaterThan(

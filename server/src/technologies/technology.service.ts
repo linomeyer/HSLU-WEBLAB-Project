@@ -2,13 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Technology } from './technology.schema';
 import { Model } from 'mongoose';
+import { TechnologyDto } from './dtos/technology.dto';
+import { UpdateTechnologyDto } from './dtos/update-technology.dto';
 
 @Injectable()
 export class TechnologyService {
   @InjectModel(Technology.name)
   private readonly technologyModel: Model<Technology>;
 
-  async create(technology: Technology): Promise<Technology> {
+  async create(technology: TechnologyDto): Promise<Technology> {
     const newTechnology = new this.technologyModel(technology);
     return newTechnology.save();
   }
@@ -25,10 +27,16 @@ export class TechnologyService {
     return tech;
   }
 
-  async update(id: string, technology: Technology): Promise<Technology> {
-    technology.changedAt = new Date();
+  async update(
+    id: string,
+    technology: UpdateTechnologyDto,
+  ): Promise<Technology> {
     const updatedTech = await this.technologyModel
-      .findByIdAndUpdate(id, technology, { new: true })
+      .findByIdAndUpdate(
+        id,
+        { ...technology, changedAt: new Date() },
+        { new: true },
+      )
       .exec();
 
     if (!updatedTech) {

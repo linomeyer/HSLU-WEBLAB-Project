@@ -9,7 +9,7 @@ import { ROLES_KEY } from './roles.decorator';
 import { JwtPayload } from './jwt-payload.interface';
 
 @Injectable()
-export class RolesGuard implements CanActivate {
+export class AdminRoleGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
@@ -17,11 +17,6 @@ export class RolesGuard implements CanActivate {
       ROLES_KEY,
       [context.getHandler(), context.getClass()],
     );
-
-    if (!requiredRoles) {
-      return true;
-    }
-
     const jwt = context.switchToHttp().getRequest<JwtPayload>();
 
     const userRoles: string[] =

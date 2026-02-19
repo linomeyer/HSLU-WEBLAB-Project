@@ -6,9 +6,9 @@ export const testTechnologies = [
     description: 'A JavaScript library for building user interfaces',
     reason:
       'React provides excellent performance and a component-based architecture that scales well for large applications.',
-    isPublished: true,
     createdAt: new Date('2024-01-15'),
     changedAt: new Date('2024-01-15'),
+    isPublished: true,
   },
   {
     name: 'Angular',
