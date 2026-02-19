@@ -23,7 +23,7 @@ export class TechnologyController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Technology | null> {
+  async findOne(@Param('id') id: string): Promise<Technology> {
     return this.technologyService.findOne(id);
   }
 
@@ -38,13 +38,13 @@ export class TechnologyController {
   async update(
     @Param('id') id: string,
     @Body() technology: Technology,
-  ): Promise<Technology | null> {
+  ): Promise<Technology> {
     return this.technologyService.update(id, technology);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async delete(@Param('id') id: string): Promise<Technology | null> {
+  async delete(@Param('id') id: string): Promise<Technology> {
     return this.technologyService.delete(id);
   }
 }
