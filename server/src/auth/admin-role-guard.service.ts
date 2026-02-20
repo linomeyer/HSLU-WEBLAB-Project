@@ -4,25 +4,24 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { ROLES_KEY } from './roles.decorator';
 import { JwtPayload } from './jwt-payload.interface';
+
+interface RequestWithUser extends Request {
+  user: JwtPayload;
+}
 
 @Injectable()
 export class AdminRoleGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  private readonly adminRole = 'admin';
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<string[]>(
-      ROLES_KEY,
-      [context.getHandler(), context.getClass()],
-    );
-    const jwt = context.switchToHttp().getRequest<JwtPayload>();
+    const request = context.switchToHttp().getRequest<RequestWithUser>();
+    const jwt = request.user;
 
     const userRoles: string[] =
       jwt?.['https://technology-radar.com/roles'] || [];
 
-    const hasRole = requiredRoles.some((role) => userRoles.includes(role));
+    const hasRole = userRoles.includes(this.adminRole);
 
     if (!hasRole) {
       throw new ForbiddenException('Insufficient role');
