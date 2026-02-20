@@ -1,9 +1,8 @@
-import {Component, computed, inject, Signal, viewChild} from '@angular/core';
+import {Component, computed, inject, viewChild} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {TechnologyService} from '../technology-radar/technology/technology.service';
-import {Technology} from '../technology-radar/technology/technology';
+import {Technology, TechnologyCreateOrUpdate} from '../technology-radar/technology/technology';
 import {CommonModule} from '@angular/common';
-import {toSignal} from '@angular/core/rxjs-interop';
 import {TechnologyFormComponent} from '../technology-radar/technology/form/technology-form.component';
 import {MatDialog} from '@angular/material/dialog';
 import {TechnologyEditModalComponent} from '../technology-radar/technology/edit/technology-edit-modal.component';
@@ -18,10 +17,8 @@ export class AdministrationComponent {
   private techService = inject(TechnologyService);
   private dialog = inject(MatDialog);
 
-  private technologies: Signal<Technology[]> = toSignal(this.techService.getAll(), {initialValue: []});
-
   unpublishedTechnologies = computed(() => {
-    return this.technologies().filter((t) => !t.isPublished);
+    return this.techService.technologies().filter((t) => !t.isPublished);
   });
 
   formComponent = viewChild<TechnologyFormComponent>(TechnologyFormComponent);
@@ -33,14 +30,13 @@ export class AdministrationComponent {
     this.successMessage = '';
     this.errorMessage = '';
 
-    const technology: Technology = {
+    const technology: TechnologyCreateOrUpdate = {
       name: formData.name!,
       category: formData.category!,
       ring: formData.ring!,
       description: formData.description!,
       reason: formData.reason!,
-      isPublished: formData.isPublished!,
-      createdAt: new Date(),
+      isPublished: formData.isPublished!
     }
 
     this.techService.post(technology).subscribe({
@@ -65,7 +61,7 @@ export class AdministrationComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.successMessage = 'Technology updated successfully!';
-        setTimeout(() => this.successMessage = '', 3000);
+        setTimeout(() => this.successMessage = '', 300);
       }
     });
   }

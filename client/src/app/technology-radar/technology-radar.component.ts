@@ -1,11 +1,10 @@
-import {Component, computed, inject, Signal} from '@angular/core';
+import {Component, computed, inject} from '@angular/core';
 import {TechnologyService} from './technology/technology.service';
 import {MatDialog} from '@angular/material/dialog';
 import {RadarPoint} from './radar-point'
 import {Technology} from './technology/technology';
 import {TechnologyDetailComponent} from './technology/detail/technology-detail.component';
 import {MatTooltip} from '@angular/material/tooltip';
-import {toSignal} from '@angular/core/rxjs-interop';
 import {AuthService} from '@auth0/auth0-angular';
 import {map, switchMap, take} from 'rxjs/operators';
 import {from} from 'rxjs';
@@ -44,10 +43,9 @@ export class TechnologyRadarComponent {
   private dialog = inject(MatDialog);
   private auth = inject(AuthService);
 
-  private technologies: Signal<Technology[]> = toSignal(this.techService.getAll(), {initialValue: []});
 
   radarPoints = computed(() => {
-    const published = this.technologies().filter((t) => t.isPublished);
+    const published = this.techService.technologies().filter((t) => t.isPublished);
     return this.positionPoints(published);
   });
 

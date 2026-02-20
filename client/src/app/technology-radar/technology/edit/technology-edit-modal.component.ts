@@ -1,4 +1,4 @@
-import {Component, inject, viewChild} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -7,7 +7,7 @@ import {
   MatDialogTitle
 } from '@angular/material/dialog';
 import {TechnologyService} from '../technology.service';
-import {Technology} from '../technology';
+import {Technology, TechnologyCreateOrUpdate} from '../technology';
 import {TechnologyFormComponent} from '../form/technology-form.component';
 import {MatButton} from '@angular/material/button';
 
@@ -28,8 +28,6 @@ export class TechnologyEditModalComponent {
   protected data: Technology = inject(MAT_DIALOG_DATA);
   private techService = inject(TechnologyService);
 
-  formComponent = viewChild<TechnologyFormComponent>(TechnologyFormComponent);
-
   errorMessage = '';
   successMessage = '';
 
@@ -37,10 +35,13 @@ export class TechnologyEditModalComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    const updatedTechnology: Technology = {
-      ...this.data,
-      ...formData,
-      changedAt: new Date()
+    const updatedTechnology: TechnologyCreateOrUpdate = {
+      name: formData.name!,
+      category: formData.category!,
+      ring: formData.ring!,
+      description: formData.description!,
+      reason: formData.reason!,
+      isPublished: formData.isPublished!
     };
 
     this.techService.put(this.data._id!, updatedTechnology).subscribe({
@@ -48,7 +49,7 @@ export class TechnologyEditModalComponent {
         this.successMessage = 'Technology updated successfully!';
         setTimeout(() => {
           this.dialogRef.close(true); // Close and signal success
-        }, 1000);
+        }, 300);
       },
       error: (err) => {
         this.errorMessage = 'Failed to update technology. Please try again.';

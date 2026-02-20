@@ -9,3 +9,12 @@ export interface Technology {
   createdAt: Date;
   changedAt?: Date;
 }
+
+export interface TechnologyCreateOrUpdate {
+  name: string;
+  category: string;
+  ring: string;
+  description: string;
+  reason: string;
+  isPublished: boolean;
+}
