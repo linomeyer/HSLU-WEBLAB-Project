@@ -13,6 +13,13 @@
     [submitButtonText]="'Update Technology'"
     (formSubmit)="onFormSubmit($event)">
   </app-technology-form>
+
+  <div class="dates">
+    <p class="date">Added on {{ data.createdAt | date:'mediumDate' }}</p>
+    @if (data.changedAt) {
+      <p class="date">Last changed on {{ data.changedAt | date:'mediumDate' }}</p>
+    }
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>

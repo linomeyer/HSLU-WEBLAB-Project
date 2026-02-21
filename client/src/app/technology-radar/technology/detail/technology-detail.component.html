@@ -13,7 +13,12 @@
   <h3>Reason</h3>
   <p>{{ data.technology.reason }}</p>
 
-  <p class="date">Added on {{ data.technology.createdAt | date:'mediumDate' }}</p>
+  <div>
+    <p class="date">Added on {{ data.technology.createdAt | date:'mediumDate' }}</p>
+    @if (data.technology.changedAt) {
+      <p class="date">Last changed on {{ data.technology.changedAt | date:'mediumDate' }}</p>
+    }
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close class="close-button">Close</button>

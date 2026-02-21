@@ -10,6 +10,7 @@ import {TechnologyService} from '../technology.service';
 import {Technology, TechnologyCreateOrUpdate} from '../technology';
 import {TechnologyFormComponent} from '../form/technology-form.component';
 import {MatButton} from '@angular/material/button';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-technology-edit-modal',
@@ -18,7 +19,8 @@ import {MatButton} from '@angular/material/button';
     MatDialogContent,
     MatDialogActions,
     MatButton,
-    MatDialogTitle
+    MatDialogTitle,
+    DatePipe
   ],
   templateUrl: './technology-edit-modal.component.html',
   styleUrl: './technology-edit-modal.component.css',
