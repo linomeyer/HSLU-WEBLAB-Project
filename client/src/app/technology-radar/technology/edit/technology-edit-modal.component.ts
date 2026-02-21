@@ -27,7 +27,7 @@ import {DatePipe} from '@angular/common';
 })
 export class TechnologyEditModalComponent {
   private dialogRef = inject(MatDialogRef<TechnologyEditModalComponent>);
-  protected data: Technology = inject(MAT_DIALOG_DATA);
+  public data: Technology = inject(MAT_DIALOG_DATA);
   private techService = inject(TechnologyService);
 
   errorMessage = '';
