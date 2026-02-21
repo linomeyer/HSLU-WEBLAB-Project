@@ -52,16 +52,4 @@
       </g>
     }
   </svg>
-
-  <!-- Legend -->
-  <div class="legend">
-    @for (radarPoint of radarPoints(); track radarPoint.id) {
-      <div
-        (click)="openDetail(radarPoint)"
-        class="legend-item">
-        <span class="legend-number" [style.background-color]="radarPoint.color">{{ $index + 1 }}</span>
-        <span class="legend-name">{{ radarPoint.name }}</span>
-      </div>
-    }
-  </div>
 </div>
