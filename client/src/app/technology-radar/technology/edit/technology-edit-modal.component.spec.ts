@@ -136,6 +136,8 @@ describe('TechnologyEditModalComponent', () => {
     });
 
     it('should not close dialog on failed update', () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {
+      });
       const error = new Error('Update failed');
       vi.mocked(mockTechnologyService.put as any).mockReturnValue(throwError(() => error));
 
@@ -210,13 +212,11 @@ describe('TechnologyEditModalComponent', () => {
     });
 
     it('should set error message on failed deletion', () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {
+      });
       confirmSpy.mockReturnValue(true);
       const error = new Error('Delete failed');
       vi.mocked(mockTechnologyService.delete as any).mockReturnValue(throwError(() => error));
-
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {
-      });
-
       component.onDelete();
 
       expect(component.errorMessage).toBe('Failed to delete technology. Please try again.');
@@ -227,6 +227,8 @@ describe('TechnologyEditModalComponent', () => {
     });
 
     it('should not close dialog on failed deletion', () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {
+      });
       confirmSpy.mockReturnValue(true);
       const error = new Error('Delete failed');
       vi.mocked(mockTechnologyService.delete as any).mockReturnValue(throwError(() => error));
