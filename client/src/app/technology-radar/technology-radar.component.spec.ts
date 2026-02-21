@@ -361,12 +361,12 @@ describe('TechnologyRadarComponent', () => {
 
     it('should render ring circles', () => {
       const circles = fixture.nativeElement.querySelectorAll('circle[stroke="#ccc"]');
-      expect(circles.length).toBeGreaterThanOrEqual(4); // At least 4 ring circles
+      expect(circles.length).toBeGreaterThanOrEqual(4);
     });
 
     it('should render quadrant divider lines', () => {
       const lines = fixture.nativeElement.querySelectorAll('line[stroke="#ccc"]');
-      expect(lines.length).toBeGreaterThanOrEqual(2); // Horizontal and vertical lines
+      expect(lines.length).toBeGreaterThanOrEqual(2);
     });
 
     it('should render quadrant labels', () => {
@@ -374,10 +374,10 @@ describe('TechnologyRadarComponent', () => {
       expect(labels.length).toBe(4);
 
       const labelTexts = Array.from(labels).map((el: any) => el.textContent.trim());
-      expect(labelTexts).toContain('Techniques >');
-      expect(labelTexts).toContain('Tools >');
-      expect(labelTexts).toContain('Platforms >');
-      expect(labelTexts).toContain('Languages & Frameworks >');
+      expect(labelTexts).toContain('Techniques');
+      expect(labelTexts).toContain('Tools');
+      expect(labelTexts).toContain('Platforms');
+      expect(labelTexts).toContain('Languages & Frameworks');
     });
 
     it('should render ring labels', () => {
