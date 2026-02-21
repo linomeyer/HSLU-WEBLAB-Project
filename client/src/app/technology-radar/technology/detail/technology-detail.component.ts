@@ -27,5 +27,5 @@ import {MatButton} from '@angular/material/button';
   styleUrl: './technology-detail.component.css',
 })
 export class TechnologyDetailComponent {
-  protected data: { technology: Technology; color: string } = inject(MAT_DIALOG_DATA);
+  data: { technology: Technology; color: string } = inject(MAT_DIALOG_DATA);
 }
