@@ -106,17 +106,10 @@ describe('TechnologyEditModalComponent', () => {
 
     it('should close dialog after successful update', async () => {
       vi.mocked(mockTechnologyService.put as any).mockReturnValue(of({}));
-      vi.useFakeTimers();
 
       component.onFormSubmit(formData);
 
-      expect(mockDialogRef.close).not.toHaveBeenCalled();
-
-      vi.advanceTimersByTime(300);
-
       expect(mockDialogRef.close).toHaveBeenCalledWith(true);
-
-      vi.useRealTimers();
     });
 
     it('should set error message on failed update', () => {
@@ -185,30 +178,13 @@ describe('TechnologyEditModalComponent', () => {
       expect(mockTechnologyService.delete).toHaveBeenCalledWith('1');
     });
 
-    it('should set success message on successful deletion', () => {
-      confirmSpy.mockReturnValue(true);
-      vi.mocked(mockTechnologyService.delete as any).mockReturnValue(of({}));
-
-      component.onDelete();
-
-      expect(component.successMessage).toBe('Technology deleted successfully!');
-      expect(component.errorMessage).toBe('');
-    });
-
     it('should close dialog after successful deletion', async () => {
       confirmSpy.mockReturnValue(true);
       vi.mocked(mockTechnologyService.delete as any).mockReturnValue(of({}));
-      vi.useFakeTimers();
 
       component.onDelete();
 
-      expect(mockDialogRef.close).not.toHaveBeenCalled();
-
-      vi.advanceTimersByTime(300);
-
       expect(mockDialogRef.close).toHaveBeenCalledWith(true);
-
-      vi.useRealTimers();
     });
 
     it('should set error message on failed deletion', () => {

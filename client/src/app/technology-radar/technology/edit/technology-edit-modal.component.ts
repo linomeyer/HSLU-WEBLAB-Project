@@ -49,9 +49,7 @@ export class TechnologyEditModalComponent {
     this.techService.put(this.data._id!, updatedTechnology).subscribe({
       next: () => {
         this.successMessage = 'Technology updated successfully!';
-        setTimeout(() => {
-          this.dialogRef.close(true);
-        }, 300);
+        this.dialogRef.close(true);
       },
       error: (err) => {
         this.errorMessage = 'Failed to update technology. Please try again.';
@@ -63,14 +61,10 @@ export class TechnologyEditModalComponent {
   onDelete(): void {
     if (confirm(`Are you sure you want to delete "${this.data.name}"? This action cannot be undone.`)) {
       this.errorMessage = '';
-      this.successMessage = '';
 
       this.techService.delete(this.data._id!).subscribe({
         next: () => {
-          this.successMessage = 'Technology deleted successfully!';
-          setTimeout(() => {
-            this.dialogRef.close(true);
-          }, 300);
+          this.dialogRef.close(true);
         },
         error: (err) => {
           this.errorMessage = 'Failed to delete technology. Please try again.';

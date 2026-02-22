@@ -9,14 +9,14 @@ export class Technology extends Document {
   @Prop({ required: true })
   category: string;
 
-  @Prop({ required: true })
-  ring: string;
+  @Prop()
+  ring?: string;
 
   @Prop({ required: true })
   description: string;
 
-  @Prop({ required: true })
-  reason: string;
+  @Prop()
+  reason?: string;
 
   @Prop({ default: new Date(), required: true })
   createdAt: Date;
