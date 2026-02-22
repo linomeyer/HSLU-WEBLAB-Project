@@ -19,9 +19,9 @@ export class TechnologyFormComponent {
   technologyForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
     category: ['', Validators.required],
-    ring: ['', Validators.required],
+    ring: [''],
     description: ['', Validators.required],
-    reason: ['', Validators.required],
+    reason: [''],
     isPublished: [false, Validators.required],
   });
 
@@ -39,6 +39,28 @@ export class TechnologyFormComponent {
         }, {emitEvent: false});
       }
     });
+
+    this.technologyForm.get('isPublished')?.valueChanges.subscribe(isPublished => {
+      this.updateConditionalValidators(isPublished);
+    });
+
+    this.updateConditionalValidators(this.technologyForm.get('isPublished')?.value);
+  }
+
+  private updateConditionalValidators(isPublished: boolean): void {
+    const ringControl = this.technologyForm.get('ring');
+    const reasonControl = this.technologyForm.get('reason');
+
+    if (isPublished) {
+      ringControl?.setValidators([Validators.required]);
+      reasonControl?.setValidators([Validators.required]);
+    } else {
+      ringControl?.clearValidators();
+      reasonControl?.clearValidators();
+    }
+
+    ringControl?.updateValueAndValidity();
+    reasonControl?.updateValueAndValidity();
   }
 
   onSubmit(): void {

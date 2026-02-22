@@ -52,14 +52,19 @@ describe('TechnologyFormComponent', () => {
       expect(component.technologyForm.valid).toBe(false);
     });
 
-    it('should have all required validators', () => {
+    it('should have required validators for always-required fields', () => {
       const form = component.technologyForm;
 
       expect(form.get('name')?.hasError('required')).toBe(true);
       expect(form.get('category')?.hasError('required')).toBe(true);
-      expect(form.get('ring')?.hasError('required')).toBe(true);
       expect(form.get('description')?.hasError('required')).toBe(true);
-      expect(form.get('reason')?.hasError('required')).toBe(true);
+    });
+
+    it('should not have required validators for ring and reason when isPublished is false', () => {
+      const form = component.technologyForm;
+
+      expect(form.get('ring')?.hasError('required')).toBe(false);
+      expect(form.get('reason')?.hasError('required')).toBe(false);
     });
   });
 
@@ -143,16 +148,31 @@ describe('TechnologyFormComponent', () => {
       expect(component.technologyForm.get('category')?.hasError('required')).toBe(true);
     });
 
-    it('should be invalid when ring is empty', () => {
+    it('should be invalid when ring is empty and isPublished is true', () => {
       component.technologyForm.patchValue({
         name: 'Test',
         category: 'Tools',
+        ring: '',
         description: 'Test',
-        reason: 'Test'
+        reason: 'Test',
+        isPublished: true
       });
 
       expect(component.technologyForm.valid).toBe(false);
       expect(component.technologyForm.get('ring')?.hasError('required')).toBe(true);
+    });
+
+    it('should be valid when ring is empty and isPublished is false', () => {
+      component.technologyForm.patchValue({
+        name: 'Test',
+        category: 'Tools',
+        ring: '',
+        description: 'Test',
+        reason: '',
+        isPublished: false
+      });
+
+      expect(component.technologyForm.valid).toBe(true);
     });
 
     it('should be invalid when description is empty', () => {
@@ -167,16 +187,31 @@ describe('TechnologyFormComponent', () => {
       expect(component.technologyForm.get('description')?.hasError('required')).toBe(true);
     });
 
-    it('should be invalid when reason is empty', () => {
+    it('should be invalid when reason is empty and isPublished is true', () => {
       component.technologyForm.patchValue({
         name: 'Test',
         category: 'Tools',
         ring: 'Adopt',
-        description: 'Test'
+        description: 'Test',
+        reason: '',
+        isPublished: true
       });
 
       expect(component.technologyForm.valid).toBe(false);
       expect(component.technologyForm.get('reason')?.hasError('required')).toBe(true);
+    });
+
+    it('should be valid when reason is empty and isPublished is false', () => {
+      component.technologyForm.patchValue({
+        name: 'Test',
+        category: 'Tools',
+        ring: '',
+        description: 'Test',
+        reason: '',
+        isPublished: false
+      });
+
+      expect(component.technologyForm.valid).toBe(true);
     });
 
     it('should be valid when all required fields are filled', () => {

@@ -199,7 +199,7 @@ describe('AdministrationComponent', () => {
     });
 
     it('should not reset form on failed creation', () => {
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {
+      vi.spyOn(console, 'error').mockImplementation(() => {
       });
       const error = new Error('Creation failed');
       vi.mocked(mockTechnologyService.post as any).mockReturnValue(throwError(() => error));
