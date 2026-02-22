@@ -18,20 +18,11 @@ export const appConfig: ApplicationConfig = {
         redirect_uri: window.location.origin,
         audience: environment.auth0.audience,
       },
-      httpInterceptor: { // interceptor is not needed for GET Request, GET is always allowed
+      httpInterceptor: {
         allowedList: [
           {
             uri: '/api/technology*',
-            httpMethod: 'POST',
-          },
-          {
-            uri: '/api/technology*',
-            httpMethod: 'PUT',
-          },
-          {
-            uri: '/api/technology*',
-            httpMethod: 'DELETE',
-          },
+          }
         ]
       }
     }),

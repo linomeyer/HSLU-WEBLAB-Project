@@ -6,6 +6,7 @@ import {AuthService} from '@auth0/auth0-angular';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {filter, map, switchMap} from 'rxjs/operators';
 import {from, of} from 'rxjs';
+import {disabled} from '@angular/forms/signals';
 
 @Component({
   selector: 'app-navbar',
@@ -66,4 +67,6 @@ export class NavbarComponent {
       }
     });
   }
+
+  protected readonly disabled = disabled;
 }
