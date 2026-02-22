@@ -58,7 +58,7 @@ export class TechnologyEditModalComponent {
     });
   }
 
-  onDelete(): void {
+  public onDelete(): void {
     if (confirm(`Are you sure you want to delete "${this.data.name}"? This action cannot be undone.`)) {
       this.errorMessage = '';
 

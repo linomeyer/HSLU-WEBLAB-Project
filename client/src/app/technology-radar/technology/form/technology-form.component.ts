@@ -86,6 +86,13 @@ export class TechnologyFormComponent {
   }
 
   reset(): void {
-    this.technologyForm.reset();
+    this.technologyForm.reset({
+      name: '',
+      category: '',
+      ring: '',
+      description: '',
+      reason: '',
+      isPublished: false
+    });
   }
 }

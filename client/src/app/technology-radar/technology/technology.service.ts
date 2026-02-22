@@ -1,7 +1,7 @@
 import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Technology, TechnologyCreateOrUpdate} from './technology';
-import {Observable} from 'rxjs';
+import {Observable, shareReplay} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +31,9 @@ export class TechnologyService {
   }
 
   post(technology: TechnologyCreateOrUpdate): Observable<Technology> {
-    let request = this.http.post<Technology>(this.apiUrl, technology);
+    let request = this.http.post<Technology>(this.apiUrl, technology).pipe(
+      shareReplay(1)
+    );
 
     request.subscribe({
       next: (newTech) => {
@@ -44,7 +46,9 @@ export class TechnologyService {
   }
 
   put(id: string, technology: TechnologyCreateOrUpdate): Observable<Technology> {
-    const request = this.http.put<Technology>(`${this.apiUrl}/${id}`, technology);
+    const request = this.http.put<Technology>(`${this.apiUrl}/${id}`, technology).pipe(
+      shareReplay(1)
+    );
 
     request.subscribe({
       next: (updatedTech) => {
@@ -59,7 +63,9 @@ export class TechnologyService {
   }
 
   delete(id: string): Observable<Technology> {
-    const request = this.http.delete<Technology>(`${this.apiUrl}/${id}`);
+    const request = this.http.delete<Technology>(`${this.apiUrl}/${id}`).pipe(
+      shareReplay(1)
+    );
 
     request.subscribe({
       next: () => {
