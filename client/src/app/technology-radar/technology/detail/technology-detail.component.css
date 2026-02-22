@@ -1,37 +1,67 @@
-mat-dialog-content {
-  min-width: 350px;
+.detail-title {
+  color: #252525;
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
 }
 
-.chips {
-  margin-bottom: 16px;
+mat-chip-set {
+  margin-bottom: 1.5rem;
 }
 
 mat-chip {
-  color: white !important;
+  color: white;
+  font-weight: 500;
 }
 
-h3 {
-  margin: 16px 0 4px;
-  font-size: 14px;
-  color: #888;
+.detail-section {
+  margin-bottom: 1.5rem;
+}
+
+.detail-section h3 {
+  color: #cbd5e0;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.detail-title {
-  font-size: 24px;
+.detail-section p {
+  color: #e2e8f0;
+  line-height: 1.6;
+  margin: 0;
 }
 
-p {
-  margin: 0 0 12px;
-  line-height: 1.5;
+.dates {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .date {
-  font-size: 12px;
-  color: #999;
-  margin-top: 16px;
+  color: #a0aec0;
+  font-size: 0.875rem;
+  margin: 0.25rem 0;
 }
 
+mat-dialog-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+}
+
+.edit-button,
 .close-button {
-  color: #888
+  color: black;
+  font-weight: 600;
+}
+
+.edit-button:hover,
+.close-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.spacer {
+  flex: 1;
 }

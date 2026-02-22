@@ -4,11 +4,10 @@ import {TechnologyService} from './technology/technology.service';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {AuthService} from '@auth0/auth0-angular';
 import {signal} from '@angular/core';
-import {BehaviorSubject, of} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {Technology} from './technology/technology';
 import {RadarPoint} from './radar-point';
 import {TechnologyDetailComponent} from './technology/detail/technology-detail.component';
-import {TechnologyEditModalComponent} from './technology/edit/technology-edit-modal.component';
 import {expect, vi} from 'vitest';
 
 describe('TechnologyRadarComponent', () => {
@@ -275,7 +274,7 @@ describe('TechnologyRadarComponent', () => {
       vi.mocked(mockDialog.open as any).mockReturnValue(mockDialogRef);
     });
 
-    it('should open TechnologyDetailComponent for unauthenticated user', async () => {
+    it('should open TechnologyDetailComponent', async () => {
       isAuthenticatedSubject.next(false);
 
       component.openDetail(mockRadarPoint);
@@ -292,62 +291,6 @@ describe('TechnologyRadarComponent', () => {
             color: mockRadarPoint.color,
           },
           width: '500px',
-        }
-      );
-    });
-
-    it('should open TechnologyDetailComponent for authenticated non-admin user', async () => {
-      isAuthenticatedSubject.next(true);
-
-      // Mock JWT token without admin role
-      const nonAdminToken = 'header.' + btoa(JSON.stringify({
-        sub: 'user123',
-        'https://technology-radar.com/roles': ['user']
-      })) + '.signature';
-
-      vi.mocked(mockAuthService.getAccessTokenSilently as any).mockReturnValue(of(nonAdminToken));
-
-      component.openDetail(mockRadarPoint);
-
-      await vi.waitFor(() => {
-        expect(mockDialog.open).toHaveBeenCalled();
-      });
-
-      expect(mockDialog.open).toHaveBeenCalledWith(
-        TechnologyDetailComponent,
-        {
-          data: {
-            technology: mockRadarPoint.technology,
-            color: mockRadarPoint.color,
-          },
-          width: '500px',
-        }
-      );
-    });
-
-    it('should open TechnologyEditModalComponent for authenticated admin user', async () => {
-      isAuthenticatedSubject.next(true);
-
-      // Mock JWT token with admin role
-      const adminToken = 'header.' + btoa(JSON.stringify({
-        sub: 'admin123',
-        'https://technology-radar.com/roles': ['admin']
-      })) + '.signature';
-
-      vi.mocked(mockAuthService.getAccessTokenSilently as any).mockReturnValue(of(adminToken));
-
-      component.openDetail(mockRadarPoint);
-
-      await vi.waitFor(() => {
-        expect(mockDialog.open).toHaveBeenCalled();
-      });
-
-      expect(mockDialog.open).toHaveBeenCalledWith(
-        TechnologyEditModalComponent,
-        {
-          data: mockRadarPoint.technology,
-          width: '600px',
-          disableClose: false
         }
       );
     });

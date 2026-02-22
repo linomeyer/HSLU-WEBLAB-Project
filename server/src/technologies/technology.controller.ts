@@ -17,9 +17,10 @@ import {
 import { TechnologyService } from './technology.service';
 import { Technology } from './technology.schema';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { AdminRoleGuard } from '../auth/admin-role-guard.service';
+import { AdminRoleGuard } from '../auth/admin-role.guard';
 import { TechnologyDto } from './dtos/technology.dto';
 import { UpdateTechnologyDto } from './dtos/update-technology.dto';
+import { EmployeeRoleGuard } from '../auth/employee-role.guard';
 
 @ApiTags('technologies')
 @Controller('technology')
@@ -27,15 +28,28 @@ export class TechnologyController {
   constructor(private readonly technologyService: TechnologyService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all technologies' })
+  @UseGuards(JwtAuthGuard, EmployeeRoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get all technologies (Admin or Employee only)' })
   @ApiResponse({ status: 200, description: 'Returns all technologies' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Admin or Employee role required',
+  })
   async findAll(): Promise<Technology[]> {
     return this.technologyService.findAll();
   }
-
   @Get(':id')
+  @UseGuards(JwtAuthGuard, EmployeeRoleGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get technology by ID' })
   @ApiResponse({ status: 200, description: 'Returns the technology' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Admin or Employee role required',
+  })
   @ApiResponse({ status: 404, description: 'Technology not found' })
   async findOne(@Param('id') id: string): Promise<Technology> {
     return this.technologyService.findOne(id);

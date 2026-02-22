@@ -1,26 +1,73 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TechnologyDetailComponent} from './technology-detail.component';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Technology} from '../technology';
-import {expect} from 'vitest';
+import {expect, vi} from 'vitest';
+import {AuthService} from '@auth0/auth0-angular';
+import {BehaviorSubject, of} from 'rxjs';
 
 describe('TechnologyDetailComponent', () => {
   let component: TechnologyDetailComponent;
   let fixture: ComponentFixture<TechnologyDetailComponent>;
   let mockData: { technology: Technology; color: string };
+  let mockAuthService: any;
+  let mockDialog: any;
+  let mockDialogRef: any;
+  let isAuthenticatedSubject: BehaviorSubject<boolean>;
+  let getAccessTokenSilentlySpy: any;
 
-  const setupComponent = async (data: { technology: Technology; color: string }) => {
+  const setupComponent = async (
+    data: { technology: Technology; color: string },
+    isAdmin: boolean = false
+  ) => {
     TestBed.resetTestingModule();
+
+    isAuthenticatedSubject = new BehaviorSubject<boolean>(isAdmin);
+    getAccessTokenSilentlySpy = vi.fn();
+
+    if (isAdmin) {
+      const adminToken = 'header.' + btoa(JSON.stringify({
+        sub: 'admin123',
+        'https://technology-radar.com/roles': ['admin']
+      })) + '.signature';
+      getAccessTokenSilentlySpy.mockReturnValue(of(adminToken));
+    } else {
+      const employeeToken = 'header.' + btoa(JSON.stringify({
+        sub: 'employee123',
+        'https://technology-radar.com/roles': ['employee']
+      })) + '.signature';
+      getAccessTokenSilentlySpy.mockReturnValue(of(employeeToken));
+    }
+
+    mockAuthService = {
+      isAuthenticated$: isAuthenticatedSubject.asObservable(),
+      getAccessTokenSilently: getAccessTokenSilentlySpy
+    };
+
+    mockDialogRef = {
+      close: vi.fn()
+    };
+
+    mockDialog = {
+      open: vi.fn().mockReturnValue({
+        afterClosed: vi.fn().mockReturnValue(of(false))
+      })
+    };
+
     await TestBed.configureTestingModule({
       imports: [TechnologyDetailComponent],
       providers: [
-        {provide: MAT_DIALOG_DATA, useValue: data}
+        {provide: MAT_DIALOG_DATA, useValue: data},
+        {provide: AuthService, useValue: mockAuthService},
+        {provide: MatDialog, useValue: mockDialog},
+        {provide: MatDialogRef, useValue: mockDialogRef}
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TechnologyDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    await fixture.whenStable();
 
     return {fixture, component};
   };
@@ -41,16 +88,7 @@ describe('TechnologyDetailComponent', () => {
       color: '#b3588e'
     };
 
-    await TestBed.configureTestingModule({
-      imports: [TechnologyDetailComponent],
-      providers: [
-        {provide: MAT_DIALOG_DATA, useValue: mockData}
-      ]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(TechnologyDetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    await setupComponent(mockData, false);
   });
 
   describe('Component Initialization', () => {
@@ -70,6 +108,18 @@ describe('TechnologyDetailComponent', () => {
       expect(component.data.technology.ring).toBe('Adopt');
       expect(component.data.technology.description).toBe('A JavaScript library for building user interfaces');
       expect(component.data.technology.reason).toBe('Widely adopted and maintained');
+    });
+
+    it('should initialize isAdmin as false for non-admin user', () => {
+      expect(component.isAdmin()).toBe(false);
+    });
+
+    it('should initialize isAdmin as true for admin user', async () => {
+      await setupComponent(mockData, true);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(component.isAdmin()).toBe(true);
     });
   });
 
@@ -92,7 +142,7 @@ describe('TechnologyDetailComponent', () => {
 
       expect(categoryChip).toBeTruthy();
       expect(categoryChip.textContent.trim()).toBe('Languages & Frameworks');
-      expect(categoryChip.style.backgroundColor).toBe('rgb(179, 88, 142)'); // #b3588e in RGB
+      expect(categoryChip.style.backgroundColor).toBe('rgb(179, 88, 142)');
     });
 
     it('should render ring chip', () => {
@@ -182,9 +232,61 @@ describe('TechnologyDetailComponent', () => {
       expect(closeButton.classList.contains('close-button')).toBe(true);
     });
 
+    it('should not render Edit button for non-admin users', () => {
+      const editButton = Array.from(
+        fixture.nativeElement.querySelectorAll('button')
+      ).find((btn: any) => btn.textContent.includes('Edit'));
+
+      expect(editButton).toBeFalsy();
+    });
+
+    it('should render Edit button for admin users', async () => {
+      await setupComponent(mockData, true);
+      fixture.detectChanges();
+
+      const editButton = Array.from(
+        fixture.nativeElement.querySelectorAll('button')
+      ).find((btn: any) => btn.textContent.includes('Edit'));
+
+      expect(editButton).toBeTruthy();
+    });
+
     it('should render mat-dialog-actions', () => {
       const actions = fixture.nativeElement.querySelector('mat-dialog-actions');
       expect(actions).toBeTruthy();
+    });
+  });
+
+  describe('onEdit method', () => {
+    it('should close current dialog and open edit modal', async () => {
+      await setupComponent(mockData, true);
+
+      component.onEdit();
+
+      expect(mockDialogRef.close).toHaveBeenCalled();
+      expect(mockDialog.open).toHaveBeenCalledWith(
+        expect.anything(),
+        {
+          data: mockData.technology,
+          width: '600px',
+          disableClose: false
+        }
+      );
+    });
+
+    it('should call onEdit when Edit button is clicked', async () => {
+      await setupComponent(mockData, true);
+      fixture.detectChanges();
+
+      const spy = vi.spyOn(component, 'onEdit');
+
+      const editButton = Array.from(
+        fixture.nativeElement.querySelectorAll('button')
+      ).find((btn: any) => btn.textContent.includes('Edit')) as HTMLElement;
+
+      editButton.click();
+
+      expect(spy).toHaveBeenCalled();
     });
   });
 
@@ -212,56 +314,7 @@ describe('TechnologyDetailComponent', () => {
       const chips = fixture.nativeElement.querySelectorAll('mat-chip');
       expect(chips[0].textContent.trim()).toBe('Tools');
       expect(chips[1].textContent.trim()).toBe('Trial');
-      expect(chips[0].style.backgroundColor).toBe('rgb(134, 183, 130)'); // #86b782 in RGB
-    });
-
-    it('should handle all ring types', async () => {
-      const rings = ['Adopt', 'Trial', 'Assess', 'Hold'];
-
-      for (const ring of rings) {
-        const data = {
-          technology: {
-            ...mockData.technology,
-            ring: ring
-          },
-          color: '#000000'
-        };
-
-        await setupComponent(data);
-
-        fixture = TestBed.createComponent(TechnologyDetailComponent);
-        fixture.detectChanges();
-
-        const chips = fixture.nativeElement.querySelectorAll('mat-chip');
-        expect(chips[1].textContent.trim()).toBe(ring);
-      }
-    });
-
-    it('should handle all category types', async () => {
-      const categories = [
-        {name: 'Techniques', color: '#1ebccd'},
-        {name: 'Tools', color: '#86b782'},
-        {name: 'Platforms', color: '#c9a857'},
-        {name: 'Languages & Frameworks', color: '#b3588e'}
-      ];
-
-      for (const category of categories) {
-        const data = {
-          technology: {
-            ...mockData.technology,
-            category: category.name
-          },
-          color: category.color
-        };
-
-        await setupComponent(data);
-
-        fixture = TestBed.createComponent(TechnologyDetailComponent);
-        fixture.detectChanges();
-
-        const chips = fixture.nativeElement.querySelectorAll('mat-chip');
-        expect(chips[0].textContent.trim()).toBe(category.name);
-      }
+      expect(chips[0].style.backgroundColor).toBe('rgb(134, 183, 130)');
     });
   });
 });

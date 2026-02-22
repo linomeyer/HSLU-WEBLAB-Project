@@ -46,10 +46,16 @@
   transition: all 0.2s ease;
 }
 
+.admin-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #1a1d24 !important;
+  color: #68778c !important;
+}
+
 .admin-active {
   background-color: #2a652b !important;
 }
-
 
 .admin-button:hover {
   background-color: #3a3f4b !important;

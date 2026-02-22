@@ -251,7 +251,18 @@ describe('NavbarComponent', () => {
   });
 
   describe('Button interactions', () => {
-    it('should call goToAdministration when admin button is clicked', () => {
+    it('should call goToAdministration when admin button is clicked and user is admin', async () => {
+      const adminToken = 'header.' + btoa(JSON.stringify({
+        sub: 'admin123',
+        'https://technology-radar.com/roles': ['admin']
+      })) + '.signature';
+
+      getAccessTokenSilentlySpy.mockReturnValue(of(adminToken));
+      isAuthenticatedSubject.next(true);
+
+      await fixture.whenStable();
+      fixture.detectChanges();
+
       const spy = vi.spyOn(component, 'goToAdministration');
 
       const adminButton = Array.from(
@@ -261,6 +272,23 @@ describe('NavbarComponent', () => {
       adminButton.click();
 
       expect(spy).toHaveBeenCalled();
+    });
+
+    it('should not call goToAdministration when admin button is clicked and user is not admin (button is disabled)', () => {
+      isAuthenticatedSubject.next(false);
+      fixture.detectChanges();
+
+      const spy = vi.spyOn(component, 'goToAdministration');
+
+      const adminButton = Array.from(
+        fixture.nativeElement.querySelectorAll('button')
+      ).find((btn: any) => btn.textContent.includes('Administration')) as HTMLButtonElement;
+
+      expect(adminButton.disabled).toBe(true);
+
+      adminButton.click();
+
+      expect(spy).not.toHaveBeenCalled();
     });
 
     it('should call handleProfileClick when profile button is clicked', () => {

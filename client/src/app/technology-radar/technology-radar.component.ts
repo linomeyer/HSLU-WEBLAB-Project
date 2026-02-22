@@ -6,9 +6,6 @@ import {Technology} from './technology/technology';
 import {TechnologyDetailComponent} from './technology/detail/technology-detail.component';
 import {MatTooltip} from '@angular/material/tooltip';
 import {AuthService} from '@auth0/auth0-angular';
-import {map, switchMap, take} from 'rxjs/operators';
-import {from} from 'rxjs';
-import {TechnologyEditModalComponent} from './technology/edit/technology-edit-modal.component';
 
 const CATEGORIES = ['Techniques', 'Tools', 'Platforms', 'Languages & Frameworks'];
 const RINGS = ['Adopt', 'Trial', 'Assess', 'Hold'];
@@ -57,40 +54,16 @@ export class TechnologyRadarComponent {
   size = RADAR_SIZE;
 
   /**
-   * Opens a modal dialog for editing a technology.
-   * If the user is not an admin, only the detail view is shown.
+   * Opens the detail modal for a technology.
+   * Admins will see an Edit button in the detail modal that brings them to the edit modal.
    */
   openDetail(radarPoint: RadarPoint): void {
-    this.auth.isAuthenticated$.pipe(
-      take(1),
-      switchMap((isAuthenticated) => {
-        if (!isAuthenticated) {
-          return from([false]);
-        }
-        return from(this.auth.getAccessTokenSilently()).pipe(
-          map((token) => {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            const roles: string[] = payload['https://technology-radar.com/roles'] || [];
-            return roles.includes('admin');
-          })
-        );
-      })
-    ).subscribe((isAdmin) => {
-      if (isAdmin) {
-        this.dialog.open(TechnologyEditModalComponent, {
-          data: radarPoint.technology,
-          width: '600px',
-          disableClose: false
-        });
-      } else {
-        this.dialog.open(TechnologyDetailComponent, {
-          data: {
-            technology: radarPoint.technology,
-            color: radarPoint.color,
-          },
-          width: '500px',
-        });
-      }
+    this.dialog.open(TechnologyDetailComponent, {
+      data: {
+        technology: radarPoint.technology,
+        color: radarPoint.color,
+      },
+      width: '500px',
     });
   }
 
