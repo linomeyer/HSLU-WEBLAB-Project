@@ -3,12 +3,14 @@ import {
   IsBoolean,
   IsIn,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Matches,
 } from 'class-validator';
 import { Trim } from 'class-sanitizer';
 import { CategoryEnum } from './category.enum';
 import { RingEnum } from './ring.enum';
+import { IsRequiredWhenPublished } from './required-when-published.decorator';
 
 export class TechnologyDto {
   @ApiProperty({
@@ -40,10 +42,12 @@ export class TechnologyDto {
     description: 'Technology adoption ring',
     example: RingEnum.ADOPT,
   })
+  @IsOptional()
   @IsIn(Object.values(RingEnum), {
     message: 'ring must be one of: Adopt, Trial, Assess, Hold',
   })
-  ring: RingEnum;
+  @IsRequiredWhenPublished()
+  ring?: RingEnum;
 
   @ApiProperty({
     required: true,
@@ -61,11 +65,12 @@ export class TechnologyDto {
     description: 'Reason for adoption/assessment',
     example: 'Industry standard for modern web development',
   })
-  @IsNotEmpty()
   @IsString()
   @Trim()
   @Matches(/\S/, { message: 'reason must not be blank' })
-  reason: string;
+  @IsOptional()
+  @IsRequiredWhenPublished()
+  reason?: string;
 
   @ApiProperty({
     required: true,
