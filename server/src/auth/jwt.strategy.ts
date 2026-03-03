@@ -3,21 +3,31 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { passportJwtSecret } from 'jwks-rsa';
 import { JwtPayload } from './jwt-payload.interface';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(private configService: ConfigService) {
+    const jwksUri = configService.get<string>('AUTH0_JWKS_URI');
+    const audience = configService.get<string>('AUTH0_AUDIENCE');
+    const issuer = configService.get<string>('AUTH0_ISSUER');
+
+    if (!jwksUri || !audience || !issuer) {
+      throw new Error(
+        'Missing required Auth0 configuration. Please check your .env file.',
+      );
+    }
+
     super({
       secretOrKeyProvider: passportJwtSecret({
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 5,
-        jwksUri:
-          'https://dev-82m7uo7ptlal3yfw.us.auth0.com/.well-known/jwks.json',
+        jwksUri: jwksUri,
       }),
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      audience: 'https://technology-radar-api',
-      issuer: 'https://dev-82m7uo7ptlal3yfw.us.auth0.com/',
+      audience: audience,
+      issuer: issuer,
       algorithms: ['RS256'],
     });
   }
