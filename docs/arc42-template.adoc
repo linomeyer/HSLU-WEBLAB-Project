@@ -32,10 +32,6 @@ include::src/about-arc42.adoc[]
 include::src/01_introduction_and_goals.adoc[]
 
 <<<<
-// 2. Randbedingungen
-include::src/02_architecture_constraints.adoc[]
-
-<<<<
 // 3. Kontextabgrenzung
 include::src/03_context_and_scope.adoc[]
 
@@ -66,11 +62,3 @@ include::src/09_architecture_decisions.adoc[]
 <<<<
 // 10. Qualitätsanforderungen
 include::src/10_quality_requirements.adoc[]
-
-<<<<
-// 11. Risiken
-include::src/11_technical_risks.adoc[]
-
-<<<<
-// 12. Glossar
-include::src/12_glossary.adoc[]
