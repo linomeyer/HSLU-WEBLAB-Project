@@ -3,6 +3,110 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-design-decisions]]
 == Architekturentscheidungen
 
+=== 1: Auth0 statt eigener Authentifizierung
 
+*Kontext*: Das System benötigt Authentifizierung und rollenbasierte Authorisierung für Admin (CTO/Tech-Lead)- und Mitarbeiter-Zugriff.
 
+*Entscheidung*: Nutzung von Auth0 als externem Identity Provider statt eigener User-Verwaltung.
 
+*Begründung*:
+
+* Keine Implementierung eigener Passwort-Hashing/Speicherung nötig (Security-Risiko minimiert)
+* OAuth2/OIDC-Standard bereits etabliert, gute Libraries verfügbar
+* Integriertes Audit-Logging für Login-Events (Qualitätsanforderung)
+* Schnelle Integration via `@auth0/auth0-angular` und `passport-jwt`
+* Kostenloser Tier
+
+*Konsequenzen*:
+
+* + Weniger Code
+* + Relativ einfaches Setup
+* - Abhängigkeit von externem Service (Auth0 muss erreichbar sein)
+* - Custom Claims für Rollen müssen in Auth0 konfiguriert werden
+
+---
+
+=== 2: MongoDB statt relationale Datenbank
+
+*Kontext*: Datenmodell für Technologien
+
+*Entscheidung*: MongoDB Atlas (NoSQL, dokumentenbasiert) statt SQL-Datenbank.
+
+*Begründung*:
+
+* Flexible Schema-Evolution (neue Felder können einfach hinzugefügt werden)
+* JSON-ähnliche Dokumente passen gut zu TypeScript-Objekten
+* Mongoose bietet typsicheres Schema + Validierung in TypeScript
+* MongoDB Atlas als Managed Service (keine lokale DB-Installation nötig)
+* Für Projektgröße ausreichend (keine komplexen Joins/Transaktionen nötig)
+
+*Konsequenzen*:
+
+* + Schnellere iterative Entwicklung
+* + Einfache Integration mit NestJS via Mongoose
+* - Keine referentielle Integrität auf DB-Ebene
+
+---
+
+=== 3: Signals statt RxJS für Client-State
+
+*Kontext*: Angular bietet sowohl RxJS Observables als auch Signals für reaktives State-Management.
+
+*Entscheidung*: Signals als primärer State-Mechanismus im `TechnologyService`.
+
+*Begründung*:
+
+* Signals sind Angular 16+ Standard für reaktive State-Verwaltung
+* Einfachere API als RxJS (weniger Boilerplate, kein manuelles Unsubscribe)
+* Automatische Change Detection ohne `async` Pipe
+* Computed Signals für abgeleiteten State (z.B. gefilterte Technologien)
+
+*Konsequenzen*:
+
+* + Weniger Code, bessere Lesbarkeit
+* + Automatisches Subscription-Management
+* + Zukunftssicher (Angular-Direction)
+
+---
+
+=== 4: Conditional Validation statt separater Entwurf-Entität
+
+*Kontext*: Technologien sollen als Entwurf gespeichert werden können (ohne vollständige Pflichtfelder), bevor sie publiziert werden.
+
+*Entscheidung*: Ein `Technology`-Schema mit `isPublished`-Flag und conditional validation, statt separate Entitäten für Entwürfe und publizierte Technologien.
+
+*Begründung*:
+
+* Einfacheres Datenmodell (eine Collection statt zwei)
+* Custom Validator `@IsRequiredWhenPublished` prüft Pflichtfelder nur bei `isPublished=true`
+* Publizieren = simples Update (`isPublished: false → true`)
+* Kein Daten-Migration zwischen Collections nötig
+
+*Konsequenzen*:
+
+* + Weniger Komplexität in Datenmodell und Queries
+* + Einfacher Workflow für Admins (Entwurf → Publish in einem Formular)
+* - Validation-Logik etwas komplexer (sowohl im Frontend als auch Backend)
+
+---
+
+=== 5: SVG-Radar statt Canvas/Charting-Library
+
+*Kontext*: Visualisierung der Technologien als Radar mit Quadranten und Ringen.
+
+*Entscheidung*: Manuelle SVG-Generierung statt Charting-Library (z.B. D3.js, Chart.js).
+
+*Begründung*:
+
+* Volle Kontrolle über Layout und Interaktivität
+* Keine zusätzliche Library-Abhängigkeit
+* SVG ist responsive und skaliert automatisch
+* Einfache Positionierungs-Logik (Polar-Koordinaten → Cartesian)
+* TypeScript-Berechnung der Punkt-Positionen transparent und wartbar
+
+*Konsequenzen*:
+
+* + Leichtgewichtig, keine Library-Overhead
+* + Anpassbar (z.B. Farben, Tooltips, Click-Events)
+* - Mehr eigener Code für Positionierung/Rendering
+* - Keine Out-of-the-box Features wie Zoom/Pan (für dieses Projekt nicht nötig)

@@ -3,19 +3,140 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-quality-scenarios]]
 == Qualitätsanforderungen
 
+=== Qualitätsbaum
 
-
-
-
-
-=== Übersicht der Qualitätsanforderungen
-
-
-
-
+[plantuml,quality-tree,svg]
+----
+@startmindmap
+* Technologie-Radar
+** Usability
+*** Responsive Design\n(Desktop/Mobile/Tablet)
+** Performance
+*** Ladezeit < 1s\n(Fast 4G)
+** Security
+*** Admin-Login\nAudit-Logging
+** Testbarkeit
+*** Unit-Tests
+*** Integration-Tests
+@endmindmap
+----
 
 === Qualitätsszenarien
 
+==== QS-1: Responsive Viewer (Desktop/Mobile/Tablet)
 
+[cols="1,3" options="header"]
+|===
+|Aspekt |Beschreibung
 
+|Qualitätsmerkmal
+|Usability, Portabilität
 
+|Szenario
+|Ein Mitarbeiter öffnet den Technologie-Radar-Viewer auf verschiedenen Geräten
+
+|Stimulus
+|Zugriff über Desktop (1920x1080), Tablet (768x1024), Smartphone (375x667)
+
+|Umgebung
+|Chrome, Firefox, Safari; normale Netzwerkverbindung
+
+|Artefakt
+|Angular SPA mit CSS Flexbox/Grid, SVG-Radar
+
+|Antwort
+|Layout passt sich automatisch an Bildschirmgröße an; Radar skaliert; Navigation bleibt bedienbar; alle Funktionen zugänglich
+
+|Messgröße
+|Alle UI-Elemente nutzbar auf Viewports >= 375px; keine horizontalen Scrollbars; Touch-optimierte Bedienung auf Mobile
+|===
+
+---
+
+==== QS-2: Performance - Ladezeit Viewer < 1s (Fast 4G)
+
+[cols="1,3" options="header"]
+|===
+|Aspekt |Beschreibung
+
+|Qualitätsmerkmal
+|Performance, Effizienz
+
+|Szenario
+|Ein Mitarbeiter öffnet erstmals den Technologie-Radar-Viewer über 4G-Verbindung
+
+|Stimulus
+|HTTP GET Request zu `/technology-radar`
+
+|Umgebung
+|Chrome Network Throttling: Fast 4G (9 Mbit/s down, 1.5 Mbit/s up, 60ms Latency, 0% Packet Loss)
+
+|Artefakt
+|Angular SPA + NestJS Backend + MongoDB Atlas
+
+|Antwort
+|Vollständig geladene und interaktive Radar-Ansicht mit allen publizierten Technologien
+
+|Messgröße
+|Initial Load Time (DOMContentLoaded) *< 1000ms*; alle Technologien geladen und visualisiert
+|===
+
+---
+
+==== QS-3: Audit-Logging - Admin-Anmeldungen aufzeichnen
+
+[cols="1,3" options="header"]
+|===
+|Aspekt |Beschreibung
+
+|Qualitätsmerkmal
+|Security, Nachvollziehbarkeit
+
+|Szenario
+|Ein Admin (CTO/Tech-Lead) oder Employee meldet sich an der Technologie-Radar-Administration an
+
+|Stimulus
+|Erfolgreicher Login über Auth0 (OAuth2/OIDC)
+
+|Umgebung
+|Produktionssystem, normale Last
+
+|Artefakt
+|Auth0 Identity Provider (extern)
+
+|Antwort
+|Login-Event wird automatisch in Auth0 Audit Logs gespeichert (User-ID, Email, Timestamp, IP-Adresse, User-Agent)
+
+|Messgröße
+|*100%* aller Anmeldungen werden aufgezeichnet; Logs sind über Auth0 Dashboard abrufbar; Retention >= 30 Tage
+|===
+
+---
+
+==== QS-4: Testbarkeit - Unit/Integration-Tests
+
+[cols="1,3" options="header"]
+|===
+|Aspekt |Beschreibung
+
+|Qualitätsmerkmal
+|Wartbarkeit, Testbarkeit
+
+|Szenario
+|Ein Entwickler implementiert neue Funktionalität oder ändert bestehende (z.B. CRUD-Operationen für Technologien)
+
+|Stimulus
+|Code-Änderung in TechnologyController/TechnologyService
+
+|Umgebung
+|Lokale Entwicklungsumgebung + CI/CD Pipeline (falls vorhanden)
+
+|Artefakt
+|Jest (Backend) mit In-Memory MongoDB (`mongodb-memory-server`), Vitest (Frontend)
+
+|Antwort
+|Automatisierte Tests laufen; neue Tests für neue Funktionen werden geschrieben; Regressions werden erkannt
+
+|Messgröße
+|Test-Ausführung < 30s; Backend: 12 Integration-Tests für TechnologyController (CRUD-Operationen); kritische Pfade (findAll, create, update, delete) getestet
+|===

@@ -3,6 +3,76 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-solution-strategy]]
 == Lösungsstrategie
 
+Dieses Kapitel beschreibt die wesentlichen Architektur- und Technologieentscheidungen, mit denen das Projekt umgesetzt wurde.
 
+=== Architekturansatz
 
+[cols="1,3" options="header"]
+|===
+|Entscheidung |Begründung
 
+|*Client-Server-Trennung*
+|Klare Separation zwischen Frontend (`client/`) und Backend (`server/`) für unabhängige Entwicklung, Deployment und Skalierung. Angular SPA kommuniziert über REST/JSON mit NestJS API.
+
+|*Single-Page Application (SPA)*
+|Angular-basiertes Frontend für moderne, responsive User Experience. Clientseitiges Routing ermöglicht schnelle Navigation ohne Server-Roundtrips.
+
+|*RESTful API*
+|NestJS-Backend stellt HTTP-Endpunkte bereit (`GET`, `POST`, `PUT`, `DELETE` für `/api/technology`). Klare Schnittstelle, technologieunabhängig, einfach testbar.
+
+|*Rollenbasierte Zugriffskontrolle (RBAC)*
+|Zwei Rollen: *Admin* (CTO/Tech-Lead) und *Employee* (Mitarbeitende). Admin kann Technologien CRUD-mäßig verwalten, Employee nur lesend zugreifen. Guards auf Backend (NestJS) und Frontend (Angular) setzen Autorisierung durch.
+|===
+
+=== Technologieentscheidungen
+
+[cols="1,2,2" options="header"]
+|===
+|Bereich |Technologie |Begründung
+
+|*Frontend*
+|Angular 21 + TypeScript
+|Moderne, typsichere Entwicklung; Standalone Components für modulare Struktur; Reactive Forms für Formularvalidierung; Signals für State-Management. Wurde in Modul behandelt
+
+|*Backend*
+|NestJS 11 + TypeScript
+|Strukturiertes, erweiterbares Backend-Framework mit Dependency Injection, Guards, Pipes etc. Sehr nahe an Angular und daher mit Angular Erfahrung einfach zu erlernen.
+
+|*Datenbank*
+|MongoDB + Mongoose
+|Flexible Dokumenten-DB passend für iterative Entwicklung; Mongoose bietet Schema-Validierung und typsicheres Datenmodell in TypeScript an.
+
+|*Authentifizierung*
+|Auth0 (OAuth2/OIDC)
+|Externe Identity-Lösung: keine eigene Passwortverwaltung, JWT-basierte Claims für Rollen, schnelle Integration via `@auth0/auth0-angular` und `passport-jwt`.
+
+|*Testing*
+|Jest + In-Memory MongoDB
+|Unit- und Integration-Tests auf Backend; `mongodb-memory-server` für reproduzierbare Datenbank-Tests ohne externe Abhängigkeiten.
+
+|*API-Dokumentation*
+|Swagger/OpenAPI (NestJS)
+|Automatisch generierte API-Doku unter `/api` – Entwickler können Endpunkte direkt testen, spart manuelle Dokumentation.
+|===
+
+=== Strategien zur Erreichung der Qualitätsziele
+
+[cols="1,3" options="header"]
+|===
+|Qualitätsziel |Lösungsansatz
+
+|*Sicherheit*
+|Auth0 übernimmt Login/Token-Handling; JWT enthält Rollen als Custom Claim. Backend-Guards (`JwtAuthGuard`, `AdminRoleGuard`, `EmployeeRoleGuard`) prüfen Token und Rollen; Frontend-Guards (`authGuard`, `authAdminGuard`) verhindern unautorisierten Zugriff auf Routes.
+
+|*Performance (Viewer < 1s)*
+| Keine spezifischen Massnahmen
+
+|*Responsiveness*
+|CSS Flexbox/Grid für responsive Layouts; Radar passt sich dynamisch an Viewport-Größe an (SVG skaliert)
+
+|*Testbarkeit*
+|Jest-Tests für Backend (Controller, Service) mit In-Memory-DB; klare Testdaten (`technology.data.ts`); Frontend-Tests via Vitest.
+
+|*Audit-Logging (Login-Tracking)*
+|Auth0 bietet integrierte Logs aller Nutzer-Authentifizierungen im User Management; Deshalb keine eigene Implementation implementiert
+|===

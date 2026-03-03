@@ -1,22 +1,90 @@
+
 ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-concepts]]
 == Querschnittliche Konzepte
 
+=== Sicherheitskonzept
 
+*Authentifizierung*:
 
+* Externe Lösung via *Auth0* (OAuth2/OIDC)
+* Benutzer loggen sich über Auth0-Login ein (Email/Passwort)
+* Nach erfolgreicher Authentifizierung: JWT-Token mit User-Claims (inkl. Rollen)
 
+*Autorisierung*:
 
-=== _<Konzept 1>_
+* Rollenbasierte Zugriffskontrolle (RBAC): *Admin* und *Employee*
+* Rollen werden als Custom Claim im JWT hinterlegt (`https://technology-radar.com/roles`)
 
-_<Erklärung>_
+*Backend (NestJS)*:
 
-=== _<Konzept 2>_
+* `JwtAuthGuard`: Validiert JWT-Token gegen Auth0 JWKS (Public-Key-Infrastruktur)
+* `AdminRoleGuard`: Prüft, ob User die Rolle `admin` hat (für POST/PUT/DELETE)
+* `EmployeeRoleGuard`: Prüft, ob User `admin` oder `employee` ist (für GET)
 
-_<Erklärung>_
+*Frontend (Angular)*:
 
-...
+* `authGuard`: Prüft Authentifizierung, leitet zu Auth0 Login weiter falls nicht eingeloggt
+* `authAdminGuard`: Dekodiert JWT clientseitig, prüft Admin-Rolle, blockiert `/administration`-Route für Non-Admins
+* JWT wird automatisch via `authHttpInterceptorFn` in Authorization-Header eingefügt
 
-=== _<Konzept n>_
+=== Validierung
 
-_<Erklärung>_
+*Backend (NestJS)*:
+
+* DTOs mit `class-validator` Decorators (`@IsNotEmpty`, `@IsString`, `@IsIn` etc.)
+* `ValidationPipe` prüft automatisch alle eingehenden Request-Bodies
+* Custom Validator `@IsRequiredWhenPublished`: `ring` und `reason` sind nur Pflichtfelder, wenn `isPublished=true`
+* Fehler → HTTP 400 Bad Request mit detaillierten Validierungs-Messages
+
+*Frontend (Angular)*:
+
+* Reactive Forms mit Angular `Validators` (`Validators.required`)
+* Conditional Validators: `ring` und `reason` werden dynamisch required, wenn `isPublished=true`
+* `valueChanges`-Subscription auf `isPublished` aktualisiert Validatoren in Echtzeit
+* Formular-Submit blockiert bei ungültigen Daten, markiert fehlerhafte Felder
+
+=== State Management (Frontend)
+
+*Signal-basierter Ansatz*:
+
+* `TechnologyService` verwaltet globalen State mit Angular Signals
+* `_technologies = signal<Technology[]>([])` als privates Signal
+* `technologies = this._technologies.asReadonly()` als public readonly-Signal für Components
+
+*Synchronisation*:
+
+* Initial Load: `getAll()` lädt alle Technologien beim Service-Init
+* Nach POST/PUT/DELETE: lokaler Signal-State wird optimistisch aktualisiert
+* Components reagieren automatisch auf State-Änderungen (computed signals, signal-basierte Templates)
+
+*Vorteile*:
+
+* Kein manuelles Subscription-Management nötig
+* Automatische Change Detection
+* Single Source of Truth für Technologien im Client
+
+=== Datenhaltung & Schema-Management
+
+*Mongoose Schema als zentrale Datenstruktur*:
+
+* `Technology` Schema definiert Felder, Typen und Defaults
+* `@Prop()` Decorators für Metadaten (required, default, etc.)
+
+*Automatische Timestamps*:
+
+* `createdAt`: wird bei Erstellung automatisch gesetzt (MongoDB-Default: `new Date()`)
+* `changedAt`: wird bei jedem Update explizit auf das jetzige Datum gesetzt (via `TechnologyService.update()`)
+
+*Soft-State-Pattern*:
+
+* `isPublished: boolean` unterscheidet zwischen Entwürfen und publizierten Technologien
+* Entwürfe: `ring` und `reason` dürfen leer sein (conditional validation)
+* Publizierte Technologien: alle Felder sind Pflicht
+* Viewer zeigt nur publizierte Technologien (clientseitige Filterung)
+
+*Datenintegrität*:
+
+* Mongoose-Validierung auf Schema-Ebene (Typen, Required-Fields)
+* DTO-Validierung im Backend verhindert ungültige Daten

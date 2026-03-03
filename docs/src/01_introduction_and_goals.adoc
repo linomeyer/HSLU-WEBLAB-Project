@@ -1,33 +1,47 @@
 ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-introduction-and-goals]]
-==	Einführung und Ziele
+== Einführung und Ziele
 
+=== Einführung
 
+Der *Technologie-Radar* ist ein Werkzeug für das Technologie-Management in Unternehmen und Teams.
+Technologien werden in *vier Quadranten* (Techniques, Tools, Platforms, Languages & Frameworks) eingeordnet und entlang von *Maturitäts-Ringen* (Assess, Trial, Adopt, Hold) bewertet.
 
+Diese Lösung ist ein Technologie-Radar, welcher aus zwei Hauptteilen besteht:
 
+* *Administration*: Pflege und Verwaltung der Technologien (z.B. durch CTO / Tech-Lead)
+* *Viewer*: Öffentliche bzw. interne Einsicht des Radars für Mitarbeitende
+
+Technisch ist das System als Webanwendung umgesetzt und nutzt externe Authentisierung (Auth0) sowie eine cloudbasierte MongoDB für die Persistenz (Atlas).
 
 === Aufgabenstellung
 
+Ziel ist die Bereitstellung eines zentralen, einfach bedienbaren Technologie-Radars als SaaS:
 
-
-
+* Technologien erfassen, ändern, löschen und kategorisieren (Quadrant)
+* Einstufung pro Technologie in Maturitäts-Ringe (Assess/Trial/Adopt/Hold)
+* Trennung zwischen administrativer Pflege und read-only Nutzung durch Mitarbeitende
+* Zugriffsschutz für Administration via Login als Administrator
 
 === Qualitätsziele
 
-
-
-
-
-=== Stakeholder
-
-
-
-
-
-[cols="1,1,2" options="header"]
+[cols="1,3" options="header"]
 |===
-|Rolle |Kontakt |Erwartungshaltung
-| _<Rolle-1>_ | _<Kontakt-1>_ | _<Erwartung-1>_
-| _<Rolle-2>_ | _<Kontakt-2>_ | _<Erwartung-2>_ 
+|Qualitätsziel |Begründung / Konkretisierung
+
+|Responsive Viewer (Desktop/Mobile/Tablet)
+|Der Viewer ist für Mitarbeitende der primäre Zugang und muss auf gängigen Endgeräten gut nutzbar sein.
+
+|Performance: initiale Ladezeit <= 1s (Fast 4G)
+|Unter Fast-4G-Throttling (9 Mbit/s down, 1.5 Mbit/s up, 60ms Latency) soll der Viewer innerhalb von 1s laden.
+
+|Nachvollziehbarkeit von Admin-Logins
+|Alle Anmeldungen an der Administration werden aufgezeichnet (Audit-Trail für Security/Compliance).
+
+|Testbarkeit (Unit/Integration)
+|Zentrale Funktionalitäten werden über sinnvolle automatisierte Unit- und Integration-Tests abgesichert, um Regressionen zu vermeiden.
+
+|Sicherheit
+|Admin-Funktionen sind geschützt (Authentisierung/Autorisierung), um unbefugte Änderungen am Radar zu verhindern.
 |===

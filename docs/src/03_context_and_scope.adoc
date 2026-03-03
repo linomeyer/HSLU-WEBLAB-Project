@@ -3,28 +3,48 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-context-and-scope]]
 == Kontextabgrenzung
 
-
-
-
+Dieses Kapitel beschreibt die Systemgrenzen und beschreibt welche Nutzer/Umweltsysteme mit dem Technologie-Radar interargieren und über welche Schnittstellen.
 
 === Fachlicher Kontext
 
+[cols="1,2,2" options="header"]
+|===
+|Akteur/Umwelt |Interaktion mit dem System |Ergebnis
 
+|CTO / Tech-Lead (Admin)
+|Erfasst, ändert und publiziert Technologien; verwaltet Inhalte des Radars
+|Aktualisierter Technologie-Radar
 
+|Mitarbeitende (Viewer)
+|Übersicht der publizierten Technologien
+|Überblick über empfohlene/zu prüfende Technologien
 
+|Identity Provider (Auth0)
+|Authentisierung von Benutzern; liefert Identität und Rollen für Authorisierung
+|Zugriffsschutz für Administration und Viewer
 
-**<Diagramm und/oder Tabelle>**
-
-**<optional: Erläuterung der externen fachlichen Schnittstellen>**
+|Persistenz (MongoDB)
+|Speichert Technologien
+|Datenbasis für Viewer und Administration
+|===
 
 === Technischer Kontext
 
+[cols="1,2" options="header"]
+|===
+|Externe Schnittstelle |Zweck
 
+|Browser (Desktop/Mobile)
+|Nutzung der Angular Web-App (Viewer/Administration UI)
 
+|Backend API
+|CRUD-Operationen für Technologien
 
+|Auth0
+|Login/Token-Handling für Identitäts- und Rolleninformationen
 
-**<Diagramm oder Tabelle>**
+|MongoDB
+|Persistenz der Technologie-Daten
+|===
 
-**<optional: Erläuterung der externen technischen Schnittstellen>**
-
-**<Mapping fachliche auf technische Schnittstellen>**
+*Systemgrenze*: Das System umfasst Frontend (Angular) und Backend (NestJS). Authentisierung (Auth0) und Datenbank (MongoDB) sind angebundene externe Systeme.

@@ -1,105 +1,127 @@
+
 ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-building-block-view]]
 == Bausteinsicht
 
-
-
-
-
 === Whitebox Gesamtsystem
 
+[plantuml, building-block-level1, svg]
+----
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
+Person(user, "Mitarbeitende", "Employee")
+Person(admin, "CTO / Tech-Lead", "Admin")
 
+System_Boundary(system, "Technologie-Radar") {
+    Container(client, "Angular Client", "TypeScript, Angular 21", "SPA für Viewer und Administration")
+    Container(server, "NestJS Backend", "TypeScript, NestJS 11", "REST API, Business-Logik, Autorisierung")
+}
 
+System_Ext(auth0, "Auth0", "Identity Provider")
+System_Ext(mongodb, "MongoDB Atlas", "Cloud Database", "Technologie-Daten")
 
-_**<Übersichtsdiagramm>**_
+Rel(user, client, "Sichtet Technologien", "HTTPS")
+Rel(admin, client, "Verwaltet Technologien", "HTTPS")
+Rel(client, server, "API-Calls", "REST/JSON")
+Rel(client, auth0, "Login/Token", "OAuth2/OIDC")
+Rel(server, auth0, "Token-Validierung", "JWKS")
+Rel(server, mongodb, "CRUD", "Mongoose/MongoDB Driver")
+@enduml
+----
 
-Begründung:: _<Erläuternder Text>_
+*Begründung*: Klassische 3-Tier-Architektur mit externer Authentifizierung. Client und Server sind getrennt deploybar, Auth0 übernimmt Identity-Management.
 
-Enthaltene Bausteine:: _<Beschreibung der enthaltenen Bausteine (Blackboxen)>_
+*Enthaltene Bausteine*:
 
-Wichtige Schnittstellen:: _<Beschreibung wichtiger Schnittstellen>_
-
-
-
-
-
-==== <Name Blackbox 1>
-
-
-
-
-
-_<Zweck/Verantwortung>_
-
-_<Schnittstelle(n)>_
-
-_<(Optional) Qualitäts-/Leistungsmerkmale>_
-
-_<(Optional) Ablageort/Datei(en)>_
-
-_<(Optional) Erfüllte Anforderungen>_
-
-_<(optional) Offene Punkte/Probleme/Risiken>_
-
-==== <Name Blackbox 2>
-
-_<Blackbox-Template>_
-
-==== <Name Blackbox n>
-
-_<Blackbox-Template>_
-
-
-==== <Name Schnittstelle 1>
-
-...
-
-==== <Name Schnittstelle m>
+* *Angular Client*: SPA mit Viewer und Administration; routet User je nach Rolle; nutzt Auth0-SDK für Login
+* *NestJS Backend*: RESTful API mit Guards für Autorisierung; spricht mit MongoDB via Mongoose
+* *Auth0*: Externe Authentifizierung, liefert JWT mit Rollen-Claims
+* *MongoDB*: Persistiert Technologie-Daten (Name, Kategorie, Ring, Beschreibung, Status etc.)
 
 === Ebene 2
 
+==== Angular Client (Whitebox)
 
+[plantuml, building-block-client, svg]
+----
+@startuml
+package "Angular Client" {
+    [App Component] as app
+    [Navbar Component] as navbar
+    [Technology Radar Component] as radar
+    [Administration Component] as admin
+    [Auth Component] as auth
+    [Technology Service] as techService
+    [Auth Guards] as guards
+}
 
+app --> navbar
+app --> radar : Route /technology-radar
+app --> admin : Route /administration
+app --> auth : Route /auth
 
+radar --> techService : getAll()
+admin --> techService : post(), put(), delete()
 
-==== Whitebox _<Baustein 1>_
+guards --> auth : isAuthenticated, hasRole
+radar ..> guards : authGuard
+admin ..> guards : authGuard, authAdminGuard
+@enduml
+----
 
+*Zentrale Komponenten*:
 
+* *Technology Radar Component*: Visualisiert publizierte Technologien als SVG-Radar; lesender Zugriff für alle authentifizierten User
+* *Administration Component*: CRUD-Formular für Technologien; nur für Admin-Rolle; verwendet Technology Form Component
+* *Auth Component*: Login/Logout/Profil; Auth0-Integration
+* *Technology Service*: HTTP-Client für `/api/technology`; Signal-basiertes State-Management
+* *Auth Guards*: `authGuard` (Authentifizierung), `authAdminGuard` (Admin-Rolle prüfen)
 
+==== NestJS Backend (Whitebox)
 
+[plantuml, building-block-server, svg]
+----
+@startuml
+package "NestJS Backend" {
+    package "Auth Module" {
+        [JwtStrategy] as strategy
+        [JwtAuthGuard] as jwtGuard
+        [AdminRoleGuard] as adminGuard
+        [EmployeeRoleGuard] as employeeGuard
+    }
+    
+    package "Technology Module" {
+        [TechnologyController] as controller
+        [TechnologyService] as service
+        [Technology Schema] as schema
+    }
+}
 
-_<Whitebox-Template>_
+controller --> jwtGuard : @UseGuards
+controller --> adminGuard : @UseGuards (POST/PUT/DELETE)
+controller --> employeeGuard : @UseGuards (GET)
+controller --> service : findAll(), create(), update(), delete()
+service --> schema : Model<Technology>
+jwtGuard --> strategy : validate JWT
+adminGuard --> strategy : check roles
+employeeGuard --> strategy : check roles
 
-==== Whitebox _<Baustein 2>_
+database "MongoDB" as db
+schema --> db : Mongoose
+@enduml
+----
 
-_<Whitebox-Template>_
+*Zentrale Module*:
 
-...
+* *Technology Module*:
+** *TechnologyController*: REST-Endpunkte (`GET /technology`, `POST /technology`, `PUT /technology/:id`, `DELETE /technology/:id`)
+** *TechnologyService*: Business-Logik, CRUD-Operationen via Mongoose
+** *Technology Schema*: Mongoose-Schema mit Feldern (name, category, ring, description, reason, isPublished, createdAt, changedAt)
 
-==== Whitebox _<Baustein m>_
-
-_<Whitebox-Template>_
-
-=== Ebene 3
-
-
-
-
-
-==== Whitebox <_Baustein x.1_>
-
-
-
-
-
-_<Whitebox-Template>_
-
-==== Whitebox <_Baustein x.2_>
-
-_<Whitebox-Template>_
-
-==== Whitebox <_Baustein y.1_>
-
-_<Whitebox-Template>_
+* *Auth Module*:
+** *JwtStrategy*: Passport-Strategie, validiert JWT gegen Auth0 JWKS
+** *JwtAuthGuard*: Prüft, ob Request authentifiziert ist
+** *AdminRoleGuard*: Prüft, ob User Admin-Rolle hat (für Schreibzugriff)
+** *EmployeeRoleGuard*: Prüft, ob User Admin- oder Employee-Rolle hat (für Lesezugriff)

@@ -3,40 +3,79 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-deployment-view]]
 == Verteilungssicht
 
+**Hinweis: **Für dieses Projekt gibt es kein produktives Deployment, es wird lokal ausgeführt.
 
+=== Infrastruktur: Entwicklungsumgebung
 
+[plantuml,deployment-development,svg]
+----
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
 
+Deployment_Node(dev, "Developer Machine", "Windows/macOS/Linux") {
+    Deployment_Node(browser, "Web Browser", "Chrome/Firefox/Edge") {
+        Container(spa, "Angular SPA", "TypeScript, Port 4200", "ng serve")
+    }
+    
+    Deployment_Node(node_client, "Node.js", "v22+") {
+        Container(angular_cli, "Angular Dev Server", "Webpack Dev Server", "Serves SPA, Proxy zu Backend")
+    }
+    
+    Deployment_Node(node_server, "Node.js", "v22+") {
+        Container(nestjs, "NestJS Backend", "Port 3000", "nest start --watch")
+    }
+}
 
-=== Infrastruktur Ebene 1
+Deployment_Node(auth0_cloud, "Auth0 Cloud", "SaaS") {
+    Container(auth0, "Auth0 Identity Service", "OAuth2/OIDC")
+}
 
+Deployment_Node(mongodb_cloud, "MongoDB Atlas", "Cloud Database") {
+    ContainerDb(mongodb, "MongoDB Database", "NoSQL", "Technologie-Daten")
+}
 
+Rel(spa, angular_cli, "HMR, Live Reload")
+Rel(angular_cli, nestjs, "Proxy /api → http://localhost:3000", "HTTP")
+Rel(spa, auth0, "Login/Token", "HTTPS")
+Rel(nestjs, auth0, "JWT Validation", "HTTPS/JWKS")
+Rel(nestjs, mongodb, "Mongoose", "MongoDB Protocol")
+@enduml
+----
 
+*Begründung*: Lokale Entwicklungsumgebung mit Live-Reload für schnelle Iteration.
+Angular Dev Server proxied API-Calls zum Backend, um CORS-Probleme zu vermeiden (`proxy.conf.json`).
 
+*Qualitäts- und Leistungsmerkmale*:
 
-_**<Übersichtsdiagramm>**_
+* Hot Module Replacement (HMR) für schnelles Feedback bei Code-Änderungen
+* Beide Server laufen parallel auf verschiedenen Ports
+* Keine Build-Artefakte nötig, direktes Debugging möglich
 
-Begründung:: _<Erläuternder Text>_
+*Zuordnung von Bausteinen zu Infrastruktur*:
 
-Qualitäts- und/oder Leistungsmerkmale:: _<Erläuternder Text>_
+[cols="1,2" options="header"]
+|===
+|Baustein |Deployment-Node
 
-Zuordnung von Bausteinen zu Infrastruktur:: _<Beschreibung der Zuordnung>_
+|Angular Client (SPA)
+|Angular Dev Server (Port 4200) im Browser
 
-=== Infrastruktur Ebene 2
+|NestJS Backend (API)
+|Node.js (Port 3000)
 
+|Auth0
+|Externe Cloud-Instanz (dev-82m7uo7ptlal3yfw.us.auth0.com)
 
+|MongoDB
+|MongoDB Atlas Cloud (Cluster: technology-radar.szo9bpi.mongodb.net)
+|===
 
+==== Verwendung
 
+Um das Projekt lokal auszuführen zu können müssen die folgenden Schritte ausgeführt werden.
+Die einzelnen Schritte müssen jeweils sowohl im Projekt `client` als auch `server` ausgeführt werden:
 
-==== _<Infrastrukturelement 1>_
-
-_<Diagramm + Erläuterungen>_
-
-==== _<Infrastrukturelement 2>_
-
-_<Diagramm + Erläuterungen>_
-
-...
-
-==== _<Infrastrukturelement n>_
-
-_<Diagramm + Erläuterungen>_
+* `npm install` ausführen (einmalig)
+* `npm run start` ausführen um das das Frontend bzw.
+Backend zu starten
+* Im Browser die URL `http://localhost:4200/` öffnen

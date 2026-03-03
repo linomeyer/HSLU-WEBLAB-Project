@@ -1,21 +1,112 @@
+
 ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-runtime-view]]
 == Laufzeitsicht
 
+=== Szenario 1: Mitarbeiter schaut Technologie-Radar
 
+[plantuml, runtime-employee-view, svg]
+----
+@startuml
+actor "Employee" as employee
+participant "Browser" as browser
+participant "Angular\nClient" as angular
+participant "Auth0" as auth0
+participant "NestJS\nBackend" as nestjs
+participant "MongoDB\nAtlas" as db
 
+employee -> browser: Öffnet /technology-radar
+browser -> angular: Route Guard prüft Auth
+angular -> auth0: isAuthenticated?
+alt nicht authentifiziert
+    auth0 -> browser: Redirect zu Auth0 Login
+    employee -> auth0: Login (Email/Passwort)
+    auth0 -> browser: Redirect mit JWT Token
+end
 
+angular -> angular: authGuard: OK (Employee-Rolle)
+angular -> nestjs: GET /api/technology\n+ Authorization: Bearer <JWT>
+nestjs -> nestjs: JwtAuthGuard: Token validieren
+nestjs -> auth0: JWKS: Public Key abrufen
+auth0 --> nestjs: Public Key
+nestjs -> nestjs: EmployeeRoleGuard:\nRolle 'employee' prüfen
+nestjs -> db: findAll()
+db --> nestjs: [Technology[]]
+nestjs --> angular: 200 OK + JSON (publizierte Technologien)
 
-=== _<Bezeichnung Laufzeitszenario 1>_
+angular -> angular: Radar visualisieren (SVG)
+angular --> browser: Radar-Ansicht rendern
 
-*  <hier Laufzeitdiagramm oder Ablaufbeschreibung einfügen>
-*  <hier Besonderheiten bei dem Zusammenspiel der Bausteine in diesem Szenario erläutern>
+employee -> browser: Klick auf Technologie-Punkt
+browser -> angular: openDetail(technology)
+angular --> browser: Detail-Modal anzeigen
+@enduml
+----
 
-=== _<Bezeichnung Laufzeitszenario 2>_
+*Ablauf*:
 
-...
+1. Employee ruft `/technology-radar` auf → Angular prüft Authentifizierung via `authGuard`
+2. Falls nicht eingeloggt: Redirect zu Auth0 Login, nach erfolgreicher Anmeldung Rückleitung mit JWT
+3. Angular sendet `GET /api/technology` mit JWT im Authorization-Header
+4. Backend validiert Token (JwtAuthGuard + Auth0 JWKS), prüft Employee-Rolle (EmployeeRoleGuard)
+5. TechnologyService lädt alle Technologien aus MongoDB, liefert JSON zurück
+6. Angular rendert Radar-Visualisierung (SVG), filtert clientseitig auf publizierte Technologien
+7. Klick auf Technologie öffnet Detail-Modal (keine weitere Backend-Kommunikation)
 
-=== _<Bezeichnung Laufzeitszenario n>_
+=== Szenario 2: Admin erstellt neue Technologie
 
-...
+[plantuml, runtime-admin-create, svg]
+----
+@startuml
+actor "Admin\n(CTO)" as admin
+participant "Browser" as browser
+participant "Angular\nClient" as angular
+participant "Auth0" as auth0
+participant "NestJS\nBackend" as nestjs
+participant "MongoDB\nAtlas" as db
+
+admin -> browser: Öffnet /administration
+browser -> angular: Route Guards prüfen
+angular -> angular: authGuard: Authentifizierung OK
+angular -> auth0: getAccessTokenSilently()
+auth0 --> angular: JWT Token
+angular -> angular: authAdminGuard:\nRolle 'admin' aus JWT prüfen
+alt keine Admin-Rolle
+    angular --> browser: Redirect zu /technology-radar
+end
+
+angular --> browser: Administration-Seite laden
+
+admin -> browser: Füllt Formular aus\n(Name, Kategorie, Ring, ...)
+admin -> browser: Klick "Create Technology"
+browser -> angular: onFormSubmit(formData)
+angular -> angular: Formular-Validierung
+angular -> nestjs: POST /api/technology\n+ Body: TechnologyDto\n+ Authorization: Bearer <JWT>
+
+nestjs -> nestjs: JwtAuthGuard: Token validieren
+nestjs -> auth0: JWKS: Public Key
+auth0 --> nestjs: Public Key
+nestjs -> nestjs: AdminRoleGuard:\nRolle 'admin' prüfen
+nestjs -> nestjs: ValidationPipe:\nDTO validieren (class-validator)
+nestjs -> db: create(technology)
+db --> nestjs: Technology (mit _id, createdAt)
+nestjs --> angular: 201 Created + JSON
+
+angular -> angular: Signal aktualisieren:\n_technologies.update()
+angular --> browser: Success-Meldung anzeigen
+@enduml
+----
+
+*Ablauf*:
+
+1. Admin ruft `/administration` auf → Angular prüft `authGuard` + `authAdminGuard`
+2. `authAdminGuard` dekodiert JWT clientseitig, prüft ob Rolle 'admin' vorhanden
+3. Falls keine Admin-Rolle: Redirect zu `/technology-radar` (403 Forbidden)
+4. Admin füllt Formular aus (Reactive Forms mit Validierung)
+5. Submit sendet `POST /api/technology` mit TechnologyDto + JWT
+6. Backend: JwtAuthGuard validiert Token gegen Auth0, AdminRoleGuard prüft Rolle
+7. ValidationPipe prüft DTO-Constraints (required fields, enums etc.)
+8. TechnologyService erstellt Dokument in MongoDB (automatisch `createdAt` gesetzt)
+9. Backend antwortet mit 201 + erstellter Technologie (inkl. generierte `_id`)
+10. Angular aktualisiert lokalen Signal-State, zeigt Erfolgsmeldung
