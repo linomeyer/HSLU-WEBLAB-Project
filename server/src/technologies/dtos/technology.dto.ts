@@ -47,7 +47,7 @@ export class TechnologyDto {
     message: 'ring must be one of: Adopt, Trial, Assess, Hold',
   })
   @IsRequiredWhenPublished()
-  ring?: RingEnum;
+  ring?: RingEnum | null;
 
   @ApiProperty({
     required: true,
@@ -67,10 +67,9 @@ export class TechnologyDto {
   })
   @IsString()
   @Trim()
-  @Matches(/\S/, { message: 'reason must not be blank' })
   @IsOptional()
   @IsRequiredWhenPublished()
-  reason?: string;
+  reason?: string | null;
 
   @ApiProperty({
     required: true,

@@ -40,9 +40,9 @@ export class TechnologyEditModalComponent {
     const updatedTechnology: TechnologyCreateOrUpdate = {
       name: formData.name!,
       category: formData.category!,
-      ring: formData.ring!,
+      ring: formData.ring || null,
       description: formData.description!,
-      reason: formData.reason!,
+      reason: formData.reason || null,
       isPublished: formData.isPublished!
     };
 

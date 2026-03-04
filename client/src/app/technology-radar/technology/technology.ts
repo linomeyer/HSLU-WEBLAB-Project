@@ -13,8 +13,8 @@ export interface Technology {
 export interface TechnologyCreateOrUpdate {
   name: string;
   category: string;
-  ring: string;
+  ring?: string | null;
   description: string;
-  reason: string;
+  reason?: string | null;
   isPublished: boolean;
 }

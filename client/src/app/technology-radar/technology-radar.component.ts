@@ -13,7 +13,7 @@ const RING_RADII = [130, 250, 350, 440];
 const RADAR_SIZE = 960;
 const CENTER = RADAR_SIZE / 2;
 
-const CATEGORY_COLORS: Record<string, string> = {
+export const CATEGORY_COLORS: Record<string, string> = {
   'Techniques': '#1ebccd',
   'Tools': '#86b782',
   'Platforms': '#c9a857',

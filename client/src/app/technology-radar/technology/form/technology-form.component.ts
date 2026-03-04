@@ -37,6 +37,7 @@ export class TechnologyFormComponent {
           reason: tech.reason,
           isPublished: tech.isPublished,
         }, {emitEvent: false});
+      this.updateConditionalValidators(tech.isPublished);
       }
     });
 
