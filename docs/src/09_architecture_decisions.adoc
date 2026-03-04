@@ -30,7 +30,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 *Kontext*: Datenmodell für Technologien
 
-*Entscheidung*: MongoDB Atlas (NoSQL, dokumentenbasiert) statt SQL-Datenbank.
+*Entscheidung*: MongoDB (NoSQL, dokumentenbasiert) statt SQL-Datenbank.
 
 *Begründung*:
 
