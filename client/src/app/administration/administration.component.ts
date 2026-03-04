@@ -6,6 +6,7 @@ import {CommonModule} from '@angular/common';
 import {TechnologyFormComponent} from '../technology-radar/technology/form/technology-form.component';
 import {MatDialog} from '@angular/material/dialog';
 import {TechnologyEditModalComponent} from '../technology-radar/technology/edit/technology-edit-modal.component';
+import {CATEGORY_COLORS} from '../technology-radar/technology-radar.component';
 
 @Component({
   selector: 'app-administration',
@@ -64,5 +65,9 @@ export class AdministrationComponent {
         setTimeout(() => this.successMessage = '', 300);
       }
     });
+  }
+
+  getCategoryColor(category: string): string {
+    return CATEGORY_COLORS[category] || '#cccccc';
   }
 }

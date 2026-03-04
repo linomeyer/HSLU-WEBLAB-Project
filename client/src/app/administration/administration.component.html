@@ -24,7 +24,11 @@
       @for (tech of unpublishedTechnologies(); track tech._id) {
         <div class="technology-item" (click)="onTechnologyClick(tech)">
           <h3>{{ tech.name }}</h3>
-          <span class="category-badge">{{ tech.category }}</span>
+          <span
+            class="category-badge"
+            [style.background-color]="getCategoryColor(tech.category)">
+            {{ tech.category }}
+          </span>
         </div>
       }
     </div>
