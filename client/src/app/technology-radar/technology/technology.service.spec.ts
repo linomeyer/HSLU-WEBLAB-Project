@@ -143,10 +143,8 @@ describe('TechnologyService', () => {
     });
 
     it('should make POST request with correct data', async () => {
-      const createdTech: Technology = {
+      const createdTech: TechnologyCreateOrUpdate = {
         ...newTechnology,
-        _id: '3',
-        createdAt: new Date()
       };
 
       service.post(newTechnology);
@@ -158,10 +156,8 @@ describe('TechnologyService', () => {
     });
 
     it('should update technologies signal after successful post', async () => {
-      const createdTech: Technology = {
-        ...newTechnology,
-        _id: '3',
-        createdAt: new Date()
+      const createdTech: TechnologyCreateOrUpdate = {
+        ...newTechnology
       };
 
       const initialCount = service.technologies().length;
@@ -220,10 +216,9 @@ describe('TechnologyService', () => {
     });
 
     it('should make PUT request with correct data', async () => {
-      const updatedTech: Technology = {
+      const updatedTech: TechnologyCreateOrUpdate = {
         ...mockTechnologies[0],
-        ...updateData,
-        changedAt: new Date()
+        ...updateData
       };
 
       service.put('1', updateData);
@@ -235,10 +230,9 @@ describe('TechnologyService', () => {
     });
 
     it('should update technologies signal after successful put', async () => {
-      const updatedTech: Technology = {
+      const updatedTech: TechnologyCreateOrUpdate = {
         ...mockTechnologies[0],
-        ...updateData,
-        changedAt: new Date()
+        ...updateData
       };
 
       service.put('1', updateData);

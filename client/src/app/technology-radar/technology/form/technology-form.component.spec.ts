@@ -375,12 +375,12 @@ describe('TechnologyFormComponent', () => {
       component.reset();
 
       expect(component.technologyForm.value).toEqual({
-        name: null,
-        category: null,
-        ring: null,
-        description: null,
-        reason: null,
-        isPublished: null
+        name: "",
+        category: "",
+        ring: "",
+        description: "",
+        reason: "",
+        isPublished: false
       });
     });
 
@@ -482,7 +482,8 @@ describe('TechnologyFormComponent', () => {
       const ringSelect = fixture.nativeElement.querySelector('#ring');
       const options = ringSelect.querySelectorAll('option');
 
-      expect(options.length).toBe(5); // 1 disabled + 4 rings
+      expect(options.length).toBe(6); // 1 disabled + None option + 4 rings
+      expect(Array.from(options).map((o: any) => o.value)).toContain('');
       expect(Array.from(options).map((o: any) => o.value)).toContain('Adopt');
       expect(Array.from(options).map((o: any) => o.value)).toContain('Trial');
       expect(Array.from(options).map((o: any) => o.value)).toContain('Assess');

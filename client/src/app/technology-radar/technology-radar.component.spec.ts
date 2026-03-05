@@ -277,7 +277,7 @@ describe('TechnologyRadarComponent', () => {
     it('should open TechnologyDetailComponent', async () => {
       isAuthenticatedSubject.next(false);
 
-      component.openDetail(mockRadarPoint);
+      component.openDetail(mockRadarPoint.technology);
 
       await vi.waitFor(() => {
         expect(mockDialog.open).toHaveBeenCalled();

@@ -5,7 +5,7 @@ import { getModelToken, MongooseModule } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Technology, TechnologySchema } from './technology.schema';
 import {
-  closeInMongodConnection,
+  closeDBConnection,
   rootMongooseTestModule,
 } from '../test-utils/test-database.module';
 import {
@@ -51,7 +51,7 @@ describe('TechnologyController', () => {
   });
 
   afterAll(async () => {
-    await closeInMongodConnection();
+    await closeDBConnection();
   });
 
   beforeEach(async () => {

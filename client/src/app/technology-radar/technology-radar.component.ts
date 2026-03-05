@@ -38,11 +38,13 @@ export class TechnologyRadarComponent {
   private techService = inject(TechnologyService);
   private dialog = inject(MatDialog);
 
-  protected readonly categoryColors = CATEGORY_COLORS;
-  protected readonly radarSize = RADAR_SIZE;
-  protected readonly ringRadii = RING_RADII;
-  protected readonly center = CENTER;
-  protected readonly rings = RINGS;
+  public readonly categoryColors = CATEGORY_COLORS;
+  public readonly radarSize = RADAR_SIZE;
+  public readonly ringRadii = RING_RADII;
+  public readonly center = CENTER;
+  public readonly size = RADAR_SIZE;
+  public readonly categories = CATEGORIES;
+  public readonly rings = RINGS;
 
   radarPoints = computed(() => {
     const published = this.techService.technologies().filter((t) => t.isPublished);
