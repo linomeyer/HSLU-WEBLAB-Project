@@ -1,5 +1,5 @@
 <div class="radar-container">
-  <svg [attr.viewBox]="'0 0 ' + size + ' ' + size" class="radar-svg" xmlns="http://www.w3.org/2000/svg">
+  <svg [attr.viewBox]="'0 0 ' + radarSize + ' ' + radarSize" class="radar-svg" xmlns="http://www.w3.org/2000/svg">
 
     <!-- Ring circles -->
     @for (r of ringRadii; track r) {
@@ -9,19 +9,20 @@
     }
 
     <!-- Cross lines (quadrant dividers) -->
-    <line [attr.x1]="0" [attr.y1]="center" [attr.x2]="size" [attr.y2]="center"
+    <line [attr.x1]="0" [attr.y1]="center" [attr.x2]="radarSize" [attr.y2]="center"
           stroke="#ccc" stroke-width="1"/>
-    <line [attr.x1]="center" [attr.y1]="0" [attr.x2]="center" [attr.y2]="size"
+    <line [attr.x1]="center" [attr.y1]="0" [attr.x2]="center" [attr.y2]="radarSize"
           stroke="#ccc" stroke-width="1"/>
 
     <!-- Quadrant labels -->
     <text x="40" y="30" class="quadrant-label" [attr.fill]="categoryColors['Techniques']">Techniques</text>
-    <text [attr.x]="size - 40" y="30" text-anchor="end" class="quadrant-label" [attr.fill]="categoryColors['Tools']">
+    <text [attr.x]="radarSize - 40" y="30" text-anchor="end" class="quadrant-label"
+          [attr.fill]="categoryColors['Tools']">
       Tools
     </text>
-    <text x="40" [attr.y]="size - 15" class="quadrant-label" [attr.fill]="categoryColors['Platforms']">Platforms
+    <text x="40" [attr.y]="radarSize - 15" class="quadrant-label" [attr.fill]="categoryColors['Platforms']">Platforms
     </text>
-    <text [attr.x]="size - 40" [attr.y]="size - 15" text-anchor="end" class="quadrant-label"
+    <text [attr.x]="radarSize - 40" [attr.y]="radarSize - 15" text-anchor="end" class="quadrant-label"
           [attr.fill]="categoryColors['Languages & Frameworks']">Languages &amp; Frameworks
     </text>
 
@@ -39,7 +40,7 @@
     @for (radarPoint of radarPoints(); track radarPoint.id) {
       <g
         [matTooltip]="radarPoint.name"
-        (click)="openDetail(radarPoint)"
+        (click)="openDetail(radarPoint.technology)"
         class="radarpoint">
         <circle [attr.cx]="radarPoint.x" [attr.cy]="radarPoint.y" r="14"
                 fill="none" [attr.stroke]="radarPoint.color" stroke-width="2"/>
@@ -52,4 +53,23 @@
       </g>
     }
   </svg>
+
+  <!-- Show list on mobile screens -->
+  <div class="technologies-list-view">
+    @for (tech of groupedTechnologies(); track tech._id) {
+      <div
+        class="technology-item"
+        (click)="openDetail(tech)">
+        <div class="tech-info">
+          <h4>{{ tech.name }}</h4>
+          <span class="ring-label-mobile">{{ tech.ring }}</span>
+        </div>
+        <span
+          class="category-badge"
+          [style.background-color]="categoryColors[tech.category]">
+          {{ tech.category }}
+        </span>
+      </div>
+    }
+  </div>
 </div>

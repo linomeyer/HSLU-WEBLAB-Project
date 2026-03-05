@@ -13,6 +13,7 @@ import {
   testTechnologies,
 } from '../test-utils/technology.data';
 import { TechnologyDto } from './dtos/technology.dto';
+import { ConfigService } from '@nestjs/config';
 
 describe('TechnologyController', () => {
   let controller: TechnologyController;
@@ -27,7 +28,20 @@ describe('TechnologyController', () => {
         ]),
       ],
       controllers: [TechnologyController],
-      providers: [TechnologyService],
+      providers: [
+        TechnologyService,
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn((key: string) => {
+              if (key === 'AUTH0_ROLES_CLAIM') {
+                return 'https://example.com/roles';
+              }
+              return null;
+            }),
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<TechnologyController>(TechnologyController);

@@ -5,13 +5,6 @@ import {RadarPoint} from './radar-point'
 import {Technology} from './technology/technology';
 import {TechnologyDetailComponent} from './technology/detail/technology-detail.component';
 import {MatTooltip} from '@angular/material/tooltip';
-import {AuthService} from '@auth0/auth0-angular';
-
-const CATEGORIES = ['Techniques', 'Tools', 'Platforms', 'Languages & Frameworks'];
-const RINGS = ['Adopt', 'Trial', 'Assess', 'Hold'];
-const RING_RADII = [130, 250, 350, 440];
-const RADAR_SIZE = 960;
-const CENTER = RADAR_SIZE / 2;
 
 export const CATEGORY_COLORS: Record<string, string> = {
   'Techniques': '#1ebccd',
@@ -19,6 +12,12 @@ export const CATEGORY_COLORS: Record<string, string> = {
   'Platforms': '#c9a857',
   'Languages & Frameworks': '#b3588e',
 };
+
+const CATEGORIES = ['Techniques', 'Tools', 'Platforms', 'Languages & Frameworks'];
+const RINGS = ['Adopt', 'Trial', 'Assess', 'Hold'];
+const RING_RADII = [130, 250, 350, 440];
+const RADAR_SIZE = 960;
+const CENTER = RADAR_SIZE / 2;
 
 const QUADRANT_ANGLES: Record<string, { start: number; end: number }> = {
   'Techniques': {start: 180, end: 270},
@@ -38,30 +37,42 @@ const QUADRANT_ANGLES: Record<string, { start: number; end: number }> = {
 export class TechnologyRadarComponent {
   private techService = inject(TechnologyService);
   private dialog = inject(MatDialog);
-  private auth = inject(AuthService);
 
+  protected readonly categoryColors = CATEGORY_COLORS;
+  protected readonly radarSize = RADAR_SIZE;
+  protected readonly ringRadii = RING_RADII;
+  protected readonly center = CENTER;
+  protected readonly rings = RINGS;
 
   radarPoints = computed(() => {
     const published = this.techService.technologies().filter((t) => t.isPublished);
     return this.positionPoints(published);
   });
 
-  rings = RINGS;
-  ringRadii = RING_RADII;
-  categories = CATEGORIES;
-  categoryColors = CATEGORY_COLORS;
-  center = CENTER;
-  size = RADAR_SIZE;
+  // sorted by category > ring > name
+  groupedTechnologies = computed(() => {
+    const published = this.techService.technologies().filter((t) => t.isPublished);
+
+    return published.sort((a, b) => {
+      const categoryCompare = CATEGORIES.indexOf(a.category) - CATEGORIES.indexOf(b.category);
+      if (categoryCompare !== 0) return categoryCompare;
+
+      const ringCompare = RINGS.indexOf(a.ring) - RINGS.indexOf(b.ring);
+      if (ringCompare !== 0) return ringCompare;
+
+      return a.name.localeCompare(b.name);
+    });
+  });
 
   /**
    * Opens the detail modal for a technology.
    * Admins will see an Edit button in the detail modal that brings them to the edit modal.
    */
-  openDetail(radarPoint: RadarPoint): void {
+  openDetail(technology: Technology): void {
     this.dialog.open(TechnologyDetailComponent, {
       data: {
-        technology: radarPoint.technology,
-        color: radarPoint.color,
+        technology: technology,
+        color: CATEGORY_COLORS[technology.category],
       },
       width: '500px',
     });

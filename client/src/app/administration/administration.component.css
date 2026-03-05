@@ -39,7 +39,6 @@ h2 {
   color: #c62828;
 }
 
-/* Technologies List Styles */
 .technologies-list {
   max-height: calc(100vh - 200px);
   overflow-y: auto;
