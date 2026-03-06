@@ -11,11 +11,11 @@ Technologien werden in *vier Quadranten* (Techniques, Tools, Platforms, Language
 Diese Lösung ist ein Technologie-Radar, welcher aus zwei Hauptteilen besteht:
 
 * *Administration*: Pflege und Verwaltung der Technologien (z.B. durch CTO / Tech-Lead)
-* *Viewer*: Öffentliche bzw. interne Einsicht des Radars für Mitarbeitende
+* *Viewer*: Interne Ansicht des Radars für Mitarbeitende
 
-Technisch ist das System als Webanwendung umgesetzt und nutzt externe Authentisierung (Auth0) sowie eine cloudbasierte MongoDB für die Persistenz (Atlas).
+Technisch ist das System als Webanwendung (SPA) umgesetzt und nutzt externe Authentisierung (Auth0) sowie eine lokale MongoDB (Docker Image) für die Persistenz.
 
-=== Aufgabenstellung
+=== Aufgabenstellung (zusammengefasst)
 
 Ziel ist die Bereitstellung eines zentralen, einfach bedienbaren Technologie-Radars als SaaS:
 
@@ -45,3 +45,5 @@ Ziel ist die Bereitstellung eines zentralen, einfach bedienbaren Technologie-Rad
 |Sicherheit
 |Admin-Funktionen sind geschützt (Authentisierung/Autorisierung), um unbefugte Änderungen am Radar zu verhindern.
 |===
+
+Für genauere Informationen zur Einhaltung der Qualitätsziele, siehe link:10_quality_requirements.adoc[10 - Quality Requirements]

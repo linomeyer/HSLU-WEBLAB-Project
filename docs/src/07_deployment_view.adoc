@@ -1,9 +1,10 @@
+
 ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-deployment-view]]
 == Verteilungssicht
 
-**Hinweis: **Für dieses Projekt gibt es kein produktives Deployment, es wird lokal ausgeführt.
+**Hinweis:** Für dieses Projekt gibt es kein produktives Deployment, es wird lokal ausgeführt.
 
 === Infrastruktur: Entwicklungsumgebung
 
@@ -16,22 +17,24 @@ Deployment_Node(dev, "Developer Machine", "Windows/macOS/Linux") {
     Deployment_Node(browser, "Web Browser", "Chrome/Firefox/Edge") {
         Container(spa, "Angular SPA", "TypeScript, Port 4200", "ng serve")
     }
-    
-    Deployment_Node(node_client, "Node.js", "v22+") {
+
+    Deployment_Node(node_client, "Node.js", "v20/22+") {
         Container(angular_cli, "Angular Dev Server", "Webpack Dev Server", "Serves SPA, Proxy zu Backend")
     }
-    
-    Deployment_Node(node_server, "Node.js", "v22+") {
+
+    Deployment_Node(node_server, "Node.js", "v20/22+") {
         Container(nestjs, "NestJS Backend", "Port 3000", "nest start --watch")
+    }
+
+    Deployment_Node(docker, "Docker", "Docker Engine") {
+        Deployment_Node(mongo_container, "MongoDB Container", "mongo:latest, Port 27017") {
+            ContainerDb(mongodb, "MongoDB Database", "NoSQL", "Technologie-Daten")
+        }
     }
 }
 
 Deployment_Node(auth0_cloud, "Auth0 Cloud", "SaaS") {
     Container(auth0, "Auth0 Identity Service", "OAuth2/OIDC")
-}
-
-Deployment_Node(mongodb_cloud, "MongoDB Atlas", "Cloud Database") {
-    ContainerDb(mongodb, "MongoDB Database", "NoSQL", "Technologie-Daten")
 }
 
 Rel(spa, angular_cli, "HMR, Live Reload")
@@ -44,12 +47,15 @@ Rel(nestjs, mongodb, "Mongoose", "MongoDB Protocol")
 
 *Begründung*: Lokale Entwicklungsumgebung mit Live-Reload für schnelle Iteration.
 Angular Dev Server proxied API-Calls zum Backend, um CORS-Probleme zu vermeiden (`proxy.conf.json`).
+MongoDB läuft als Docker-Container und wird via docker-compose gestartet.
 
 *Qualitäts- und Leistungsmerkmale*:
 
 * Hot Module Replacement (HMR) für schnelles Feedback bei Code-Änderungen
 * Beide Server laufen parallel auf verschiedenen Ports
 * Keine Build-Artefakte nötig, direktes Debugging möglich
+* MongoDB-Daten persistiert via Docker Volume (mongodb_data)
+* Initiales Daten-Seeding via `init-mongo.js` beim ersten Start
 
 *Zuordnung von Bausteinen zu Infrastruktur*:
 
@@ -67,15 +73,20 @@ Angular Dev Server proxied API-Calls zum Backend, um CORS-Probleme zu vermeiden 
 |Externe Cloud-Instanz (dev-82m7uo7ptlal3yfw.us.auth0.com)
 
 |MongoDB
-|MongoDB Atlas Cloud (Cluster: technology-radar.szo9bpi.mongodb.net)
+|Docker Container (mongo:latest, Port 27017, lokal)
 |===
 
 ==== Verwendung
 
-Um das Projekt lokal auszuführen zu können müssen die folgenden Schritte ausgeführt werden.
-Die einzelnen Schritte müssen jeweils sowohl im Projekt `client` als auch `server` ausgeführt werden:
+Um das Projekt lokal auszuführen zu können müssen die folgenden Schritte ausgeführt werden:
 
-* `npm install` ausführen (einmalig)
-* `npm run start` ausführen um das das Frontend bzw.
-Backend zu starten
+* Im `server`-Verzeichnis:
+** `.env.template` zu `.env` kopieren (einmalig)
+** `docker compose up -d` ausführen um MongoDB zu starten (einmalig, läuft danach im Hintergrund)
+** `npm install` ausführen (einmalig)
+** `npm run start` ausführen um das Backend zu starten
+* Im `client`-Verzeichnis:
+** `npm install` ausführen (einmalig)
+** `npm run start` ausführen um das Frontend zu starten
 * Im Browser die URL `http://localhost:4200/` öffnen
+* Swagger-UI zur REST-Schnittstelle unter der URL `http://localhost:3000/api`

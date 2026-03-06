@@ -39,19 +39,19 @@ ifndef::imagesdir[:imagesdir: ../images]
 |Zugriff über Desktop (1920x1080), Tablet (768x1024), Smartphone (375x667)
 
 |Umgebung
-|Chrome, Firefox, Safari; normale Netzwerkverbindung
+|Chrome, Firefox, Safari
 
 |Artefakt
 |Angular SPA mit CSS Flexbox/Grid, SVG-Radar
 
 |Antwort
-|Layout passt sich automatisch an Bildschirmgröße an; Radar skaliert; Navigation bleibt bedienbar; alle Funktionen zugänglich
+|Layout passt sich automatisch an Bildschirmgröße an; Radar skaliert oder wird als Liste dargestellt; Navigation bleibt bedienbar; alle Funktionen zugänglich
 
 |Messgröße
-|Alle UI-Elemente nutzbar auf Viewports >= 375px; keine horizontalen Scrollbars; Touch-optimierte Bedienung auf Mobile
+|Alle UI-Elemente nutzbar auf Viewports >= 375px; keine horizontalen Scrollbars
 |===
 
----
+'''
 
 ==== QS-2: Performance - Ladezeit Viewer < 1s (Fast 4G)
 
@@ -81,9 +81,9 @@ ifndef::imagesdir[:imagesdir: ../images]
 |Initial Load Time (DOMContentLoaded) *< 1000ms*; alle Technologien geladen und visualisiert
 |===
 
----
+'''
 
-==== QS-3: Audit-Logging - Admin-Anmeldungen aufzeichnen
+==== QS-3: Audit-Logging - Anmeldungen aufzeichnen
 
 [cols="1,3" options="header"]
 |===
@@ -99,7 +99,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 |Erfolgreicher Login über Auth0 (OAuth2/OIDC)
 
 |Umgebung
-|Produktionssystem, normale Last
+| -
 
 |Artefakt
 |Auth0 Identity Provider (extern)
@@ -108,10 +108,12 @@ ifndef::imagesdir[:imagesdir: ../images]
 |Login-Event wird automatisch in Auth0 Audit Logs gespeichert (User-ID, Email, Timestamp, IP-Adresse, User-Agent)
 
 |Messgröße
-|*100%* aller Anmeldungen werden aufgezeichnet; Logs sind über Auth0 Dashboard abrufbar; Retention >= 30 Tage
+|*100%* aller Anmeldungen werden aufgezeichnet; Logs sind über Auth0 Monitoring -> Logs abrufbar
 |===
 
----
+image::Auth0_Monitoring.png[Auth0 Monitoring Logs,align="center"]
+
+'''
 
 ==== QS-4: Testbarkeit - Unit/Integration-Tests
 
@@ -123,20 +125,20 @@ ifndef::imagesdir[:imagesdir: ../images]
 |Wartbarkeit, Testbarkeit
 
 |Szenario
-|Ein Entwickler implementiert neue Funktionalität oder ändert bestehende (z.B. CRUD-Operationen für Technologien)
+|Ein Entwickler ändert die Update Funktion im TechnologyController im Backend
 
 |Stimulus
-|Code-Änderung in TechnologyController/TechnologyService
+|Code-Änderung in TechnologyController; Einige Tests fallen um
 
 |Umgebung
-|Lokale Entwicklungsumgebung + CI/CD Pipeline (falls vorhanden)
+|Lokale Entwicklungsumgebung
 
 |Artefakt
 |Jest (Backend) mit In-Memory MongoDB (`mongodb-memory-server`), Vitest (Frontend)
 
 |Antwort
-|Automatisierte Tests laufen; neue Tests für neue Funktionen werden geschrieben; Regressions werden erkannt
+|Automatisierte Tests laufen; Für neue Funktionen werden neue Testfälle geschrieben/angepasst
 
 |Messgröße
-|Test-Ausführung < 30s; Backend: 12 Integration-Tests für TechnologyController (CRUD-Operationen); kritische Pfade (findAll, create, update, delete) getestet
+|Test-Ausführung < 10s
 |===

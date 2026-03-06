@@ -17,10 +17,10 @@ Person(admin, "CTO / Tech-Lead", "Admin")
 System_Boundary(system, "Technologie-Radar") {
     Container(client, "Angular Client", "TypeScript, Angular 21", "SPA für Viewer und Administration")
     Container(server, "NestJS Backend", "TypeScript, NestJS 11", "REST API, Business-Logik, Autorisierung")
+    ContainerDb(mongodb, "MongoDB", "Docker Image: mongo:latest", "Technologie-Daten")
 }
 
 System_Ext(auth0, "Auth0", "Identity Provider")
-System_Ext(mongodb, "MongoDB Atlas", "Cloud Database", "Technologie-Daten")
 
 Rel(user, client, "Sichtet Technologien", "HTTPS")
 Rel(admin, client, "Verwaltet Technologien", "HTTPS")

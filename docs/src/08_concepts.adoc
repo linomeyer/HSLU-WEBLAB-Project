@@ -12,7 +12,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 * Benutzer loggen sich über Auth0-Login ein (Email/Passwort)
 * Nach erfolgreicher Authentifizierung: JWT-Token mit User-Claims (inkl. Rollen)
 
-*Autorisierung*:
+*Authorisierung*:
 
 * Rollenbasierte Zugriffskontrolle (RBAC): *Admin* und *Employee*
 * Rollen werden als Custom Claim im JWT hinterlegt (`https://technology-radar.com/roles`)
@@ -33,7 +33,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 *Backend (NestJS)*:
 
-* DTOs mit `class-validator` Decorators (`@IsNotEmpty`, `@IsString`, `@IsIn` etc.)
+* DTOs mit `class-validator` Decorators
 * `ValidationPipe` prüft automatisch alle eingehenden Request-Bodies
 * Custom Validator `@IsRequiredWhenPublished`: `ring` und `reason` sind nur Pflichtfelder, wenn `isPublished=true`
 * Fehler → HTTP 400 Bad Request mit detaillierten Validierungs-Messages
@@ -57,7 +57,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 * Initial Load: `getAll()` lädt alle Technologien beim Service-Init
 * Nach POST/PUT/DELETE: lokaler Signal-State wird optimistisch aktualisiert
-* Components reagieren automatisch auf State-Änderungen (computed signals, signal-basierte Templates)
+* Components reagieren automatisch auf State-Änderungen (computed signals)
 
 *Vorteile*:
 

@@ -47,4 +47,4 @@ Dieses Kapitel beschreibt die Systemgrenzen und beschreibt welche Nutzer/Umwelts
 |Persistenz der Technologie-Daten
 |===
 
-*Systemgrenze*: Das System umfasst Frontend (Angular) und Backend (NestJS). Authentisierung (Auth0) und Datenbank (MongoDB) sind angebundene externe Systeme.
+*Systemgrenze*: Das System umfasst Frontend (Angular), Backend (NestJS) und die Datenbank (MongoDB). Die Authentisierung (Auth0) ist ein angebundenes externes System.

@@ -19,34 +19,43 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 *Konsequenzen*:
 
-* + Weniger Code
-* + Relativ einfaches Setup
-* - Abhängigkeit von externem Service (Auth0 muss erreichbar sein)
-* - Custom Claims für Rollen müssen in Auth0 konfiguriert werden
+Pros::
+* Weniger Code
+* Relativ einfaches Setup
 
----
+Cons::
+* Abhängigkeit von externem Service (Auth0 muss erreichbar sein)
+* Custom Claims für Rollen müssen in Auth0 konfiguriert werden
+
+'''
 
 === 2: MongoDB statt relationale Datenbank
 
-*Kontext*: Datenmodell für Technologien
+*Kontext*: Datenmodell für Technologien in lokaler Entwicklungsumgebung.
 
-*Entscheidung*: MongoDB (NoSQL, dokumentenbasiert) statt SQL-Datenbank.
+*Entscheidung*: MongoDB (NoSQL, dokumentenbasiert) als Docker-Container statt SQL-Datenbank.
 
 *Begründung*:
 
 * Flexible Schema-Evolution (neue Felder können einfach hinzugefügt werden)
 * JSON-ähnliche Dokumente passen gut zu TypeScript-Objekten
 * Mongoose bietet typsicheres Schema + Validierung in TypeScript
-* MongoDB Atlas als Managed Service (keine lokale DB-Installation nötig)
-* Für Projektgröße ausreichend (keine komplexen Joins/Transaktionen nötig)
+* Einfaches lokales Setup via Docker Compose (keine manuelle Installation nötig)
+* Automatisches Seeding via `init-mongo.js` beim ersten Start
+* Keine komplexen Joins/Transaktionen nötig
 
 *Konsequenzen*:
 
-* + Schnellere iterative Entwicklung
-* + Einfache Integration mit NestJS via Mongoose
-* - Keine referentielle Integrität auf DB-Ebene
+Pros::
+* Schnellere iterative Entwicklung
+* Einfache Integration mit NestJS via Mongoose
+* Reproduzierbare Entwicklungsumgebung (Docker)
+* Daten-Persistierung via Docker Volume
 
----
+Cons::
+* Keine referentielle Integrität auf DB-Ebene
+
+'''
 
 === 3: Signals statt RxJS für Client-State
 
@@ -58,16 +67,17 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 * Signals sind Angular 16+ Standard für reaktive State-Verwaltung
 * Einfachere API als RxJS (weniger Boilerplate, kein manuelles Unsubscribe)
-* Automatische Change Detection ohne `async` Pipe
+* Automatische Change Detection
 * Computed Signals für abgeleiteten State (z.B. gefilterte Technologien)
 
 *Konsequenzen*:
 
-* + Weniger Code, bessere Lesbarkeit
-* + Automatisches Subscription-Management
-* + Zukunftssicher (Angular-Direction)
+Pros::
+* Weniger Code, bessere Lesbarkeit
+* Automatisches Subscription-Management
+* Zukunftssicher (Angular-Direction)
 
----
+'''
 
 === 4: Conditional Validation statt separater Entwurf-Entität
 
@@ -84,11 +94,14 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 *Konsequenzen*:
 
-* + Weniger Komplexität in Datenmodell und Queries
-* + Einfacher Workflow für Admins (Entwurf → Publish in einem Formular)
-* - Validation-Logik etwas komplexer (sowohl im Frontend als auch Backend)
+Pros::
+* Weniger Komplexität in Datenmodell und Queries
+* Einfacher Workflow für Admins (Entwurf → Publish in einem Formular)
 
----
+Cons::
+* Validation-Logik etwas komplexer (sowohl im Frontend als auch Backend)
+
+'''
 
 === 5: SVG-Radar statt Canvas/Charting-Library
 
@@ -101,12 +114,14 @@ ifndef::imagesdir[:imagesdir: ../images]
 * Volle Kontrolle über Layout und Interaktivität
 * Keine zusätzliche Library-Abhängigkeit
 * SVG ist responsive und skaliert automatisch
-* Einfache Positionierungs-Logik (Polar-Koordinaten → Cartesian)
+* Halbwegs einfache Positionierungs-Logik
 * TypeScript-Berechnung der Punkt-Positionen transparent und wartbar
 
 *Konsequenzen*:
 
-* + Leichtgewichtig, keine Library-Overhead
-* + Anpassbar (z.B. Farben, Tooltips, Click-Events)
-* - Mehr eigener Code für Positionierung/Rendering
-* - Keine Out-of-the-box Features wie Zoom/Pan (für dieses Projekt nicht nötig)
+Pros::
+* Leichtgewichtig, kein Library-Overhead
+* Anpassbar (z.B. Farben, Tooltips, Click-Events)
+
+Cons::
+* Mehr eigener Code für Positionierung/Rendering
