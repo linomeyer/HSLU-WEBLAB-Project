@@ -4,7 +4,7 @@
 
 ### Voraussetzungen
 
-- Node.js (Version 22.x empfohlen) und npm installiert
+- Node.js (Version 24.x.x verwendet) und npm installiert
 - Docker installiert
 
 ### Schritt-für-Schritt Anleitung
@@ -42,10 +42,11 @@
 
    ```bash
    # Server starten (im server-Verzeichnis)
+   cd server
    npm run start
    
    # Client starten (im client-Verzeichnis)
-   cd ../client
+   cd client
    npm run start
    ```
 
