@@ -1,0 +1,50 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-conclusion]]
+== Fazit & Reflexion
+
+=== Reflexion
+
+Die Umsetzung dieses Projekts war für mich eine sehr wertvolle Lernerfahrung.
+Ich habe während der Entwicklung viel Neues gelernt und konnte mein Wissen in einigen Bereichen deutlich erweitern.
+
+Besonders spannend war für mich die Arbeit mit NestJS, das ich zuvor noch nie verwendet hatte.
+Da es in der Verwendung viele Ähnlichkeiten mit Angular hat, habe ich mich da schnell zurecht gefunden.
+Auch bei Angular gab es für mich viel Neues zu entdecken, da das Framework hauptsächlich von älteren Versionen (vor v17) kannte.
+Mit den moderneren Features wie Signals, der neue Control Flow und die verbesserte Developer Experience hat mir die Arbeit mit Angular deutlich mehr Spass gemacht als früher.
+
+Das Projekt selbst hat mir Spass gemacht und war von Anfang an interessant.
+Besonders motivierend war, dass ich die grundlegenden Features, wie die Anzeige des Technologie-Radars, das Erstellformular und die Navigation ohne grössere Probleme und Verzögerungen auf die Beine stellen konnte.
+
+==== Herausforderungen & Learnings
+
+Trotz der positiven Erfahrungen war das Projekt insgesamt aufwändiger als ich ursprünglich gedacht hatte.
+
+Die grösste Herausforderung war für mich die Security-Implementierung mit Auth0. Das initiale Setup war schwieriger als erwartet, das Setup aus dem Tutorial stand schnell mal auf den Beinen, aber ich wollte auch noch Rollen konfigurieren, dafür einen Custom Claim definieren und auch sonst einiges anpassen.
+Ich bin aber dennoch froh das mal mit Auth0 gemacht zu haben, denn wenn man einmal verstanden hat, wie es funktioniert und alles richtig konfiguriert ist, ist es extrem praktisch.
+
+Die Formvalidierung mit den bedingten Pflichtfeldern war ein bisschen komplexer als ich erwartet habe und hat darum auch einige Zeit beansprucht.
+
+Auch beim Testing-Setup hatte ich einige Probleme, vor allem auf der Frontend-Seite.
+Ich wollte ursprünglich ein anderes Test-Framework verwenden, bin dann aber letztlich auf den Angular v21-Standard Vitest zurückgewechselt gewechselt, da es in der Konfiguration einfach nicht klappen wollte.
+Mit Vitest war ich dann aber auch zufrieden.
+
+Mein grösster Kritikpunkt an meiner Arbeit ist das zu Beginn zu wenig geplant habe.
+Ich bin gestartet ohne mir ein sauberes und durchdachtes Konzept zu überlegen.
+Das hat dazu geführt hat, dass ich ein paar Sachen im nachhinein korrigieren musste, weil ich die Aufgabenstellung teilweise nicht richtig eingehalten hatte oder weil die User Experience nicht wirklich sinnvoll war.
+
+Konkret musste ich nachbessern bei:
+
+* UI-Bedienung: Navigation und Workflow für Admins (CTO / Tech-Lead) war verwirrend
+* Authentifizierung: Login sollte für alle User erforderlich sein, nicht nur für Admins
+* Validierungslogik: `ring` und `reason` sollten nur editierbar sein, wenn die Technologie noch nicht publiziert ist
+
+Diese Korrekturen hätten vermieden werden können, wenn ich mir am Anfang mehr Zeit für die Planung genommen hätte.
+
+=== Fazit
+
+Nächstes Mal würde ich mir deutlich mehr Zeit für die initiale Planung und Anforderungsanalyse nehmen, bevor ich mit der Implementierung starte.
+Ein gut durchdachtes Konzept mit anhand der User Stories mit groben Wireframes hätte den gesamten Entwicklungsprozess schon viel effizienter und strukturierter gemacht.
+Die technische Umsetzung hat gut funktioniert, aber eine bessere Vorbereitung hätte die Umsetzung einfacher gemacht.
+
+Insgesamt bin ich aber zufrieden mit dem Resultat und ich habe viel gelernt, sowohl technisch als auch in Bezug auf Planung und Vorgehensweise.

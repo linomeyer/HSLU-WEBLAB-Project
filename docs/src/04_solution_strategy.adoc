@@ -52,7 +52,7 @@ Dieses Kapitel beschreibt die wesentlichen Architektur- und Technologieentscheid
 
 |*API-Dokumentation*
 |Swagger/OpenAPI (NestJS)
-|Automatisch generierte API-Doku unter `/api` – Entwickler können Endpunkte direkt testen, spart manuelle Dokumentation
+|Automatisch generierte API-Doku unter `/api` - Entwickler können Endpunkte direkt testen, spart manuelle Dokumentation
 |===
 
 === Strategien zur Erreichung der Qualitätsziele
